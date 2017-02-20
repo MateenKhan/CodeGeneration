@@ -3,6 +3,9 @@ package com.code.genreation.pojo;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.String;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -15,7 +18,7 @@ public class Pojo {
 	private static Logger LOGGER = Logger.getLogger(Pojo.class);
 
 	public static void main(String[] args) throws Exception {
-		String str = "{\"pojo\":{\"fields\":[{\"name\":\"id\",\"type\":\"java.lang.String\"},{\"name\":\"name\",\"type\":\"java.lang.String\"},{\"name\":\"ein\",\"type\":\"java.lang.String\"},{\"name\":\"type\",\"type\":\"java.lang.String\"},{\"name\":\"phone_number\",\"type\":\"java.lang.String\"},{\"name\":\"address\",\"type\":\"java.lang.String\"},{\"name\":\"city\",\"type\":\"java.lang.String\"},{\"name\":\"state\",\"type\":\"java.lang.String\"},{\"name\":\"country\",\"type\":\"java.lang.String\"},{\"name\":\"zipcode\",\"type\":\"java.lang.String\"},{\"name\":\"currency\",\"type\":\"java.lang.String\"},{\"name\":\"email\",\"type\":\"java.lang.String\"},{\"name\":\"payment_info\",\"type\":\"java.lang.String\"},{\"name\":\"createdBy\",\"type\":\"java.lang.String\"},{\"name\":\"modifiedBy\",\"type\":\"java.lang.String\"},{\"name\":\"createdDate\",\"type\":\"java.lang.String\"},{\"name\":\"modifiedDate\",\"type\":\"java.lang.String\"},{\"name\":\"owner\",\"type\":\"java.lang.String\"},{\"name\":\"active\",\"type\":\"java.lang.String\"}],\"location\":\"F:/Company.java\",\"name\":\"Company\"}}";
+		String str = "{\"pojo\":{\"fields\":[{\"name\":\"id\",\"type\":\"String\"},{\"name\":\"name\",\"type\":\"String\"},{\"name\":\"ein\",\"type\":\"String\"},{\"name\":\"type\",\"type\":\"String\"},{\"name\":\"phone_number\",\"type\":\"String\"},{\"name\":\"address\",\"type\":\"String\"},{\"name\":\"city\",\"type\":\"String\"},{\"name\":\"state\",\"type\":\"String\"},{\"name\":\"country\",\"type\":\"String\"},{\"name\":\"zipcode\",\"type\":\"String\"},{\"name\":\"currency\",\"type\":\"String\"},{\"name\":\"email\",\"type\":\"String\"},{\"name\":\"payment_info\",\"type\":\"String\"},{\"name\":\"createdBy\",\"type\":\"String\"},{\"name\":\"modifiedBy\",\"type\":\"String\"},{\"name\":\"createdDate\",\"type\":\"String\"},{\"name\":\"modifiedDate\",\"type\":\"String\"},{\"name\":\"owner\",\"type\":\"String\"},{\"name\":\"active\",\"type\":\"boolean\"}],\"location\":\"F:/Company.java\",\"name\":\"Company\"}}";
 		JSONObject obj = Utilities.getJsonFromString(str);
 		createPojo(obj.optJSONObject("pojo"));
 
@@ -45,7 +48,7 @@ public class Pojo {
 			// throw new Exception("file at location exists:"+location);
 			// }
 			fout = new FileOutputStream(f);
-			fout.write(("public class " + name + " {\n\n").getBytes());
+			HashSet<String> imports = new  HashSet<String>();
 			String fieldsStr = "";
 			String getterStr = "";
 			String setterStr = "";
@@ -56,16 +59,23 @@ public class Pojo {
 					throw new Exception("empty fieldName received:" + fieldName);
 				}
 				String fieldType = fieldObj.optString("type");
-				fieldType = getTypeString(fieldType);
+				fieldType = getTypeString(fieldType,imports);
 				fieldsStr += "\tprivate " + fieldType + " " + fieldName + ";\n";
 				getterStr += "\tpublic " + fieldType + " get" + getCamelCase(fieldName) + "() {\n\t\treturn " + fieldName + ";\n\t}\n";
 				setterStr += "\tpublic void set" + getCamelCase(fieldName) + "("+fieldType +" "+ fieldName+") {\n\t\tthis." + fieldName + "=" + fieldName + ";\n\t}\n";
 
 			}
-			fout.write(fieldsStr.getBytes());
-			fout.write(getterStr.getBytes());
-			fout.write(setterStr.getBytes());
-			fout.write("\n}".getBytes());
+			Iterator<String> importsItr = imports.iterator();
+			String importStr = "";
+			while(importsItr.hasNext()){
+				importStr="import "+importsItr.next()+";\n";
+			}
+			fout.write(importStr.getBytes());
+			fout.write(("public class " + name + " {\n\n").getBytes());
+			fout.write((fieldsStr+"\n").getBytes());
+			fout.write((getterStr+"\n").getBytes());
+			fout.write((setterStr+"\n").getBytes());
+			fout.write("}".getBytes());
 		} catch (Exception e) {
 			LOGGER.error(e);
 			throw e;
@@ -81,14 +91,31 @@ public class Pojo {
 	 * @param type
 	 * @return
 	 */
-	private static String getTypeString(String type) throws Exception {
+	private static String getTypeString(String type,HashSet<String> imports) throws Exception {
 		try {
 			if (StringUtils.isEmpty(type)) {
 				throw new Exception("empty field type received:" + type);
 			}
 			switch (type) {
 			case "java.lang.String":
+			case "String":
 				return "String";
+			case "boolean":
+				return "boolean";
+			case "int":
+				return "int";
+			case "char":
+				return "char";
+			case "float":
+				return "float";
+			case "double":
+				return "double";
+			case "long":
+				return "long";
+			case "short":
+				return "short";
+			case "byte":
+				return "byte";
 			default:
 				break;
 			}

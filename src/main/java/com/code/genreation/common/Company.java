@@ -1,4 +1,5 @@
 package com.code.genreation.common;
+
 public class Company {
 
 	private String id;
@@ -19,7 +20,8 @@ public class Company {
 	private String createdDate;
 	private String modifiedDate;
 	private String owner;
-	private String active;
+	private boolean active;
+
 	public String getId() {
 		return id;
 	}
@@ -74,9 +76,10 @@ public class Company {
 	public String getOwner() {
 		return owner;
 	}
-	public String getActive() {
+	public boolean getActive() {
 		return active;
 	}
+
 	public void setId(String id) {
 		this.id=id;
 	}
@@ -131,7 +134,7 @@ public class Company {
 	public void setOwner(String owner) {
 		this.owner=owner;
 	}
-	public void setActive(String active) {
+	public void setActive(boolean active) {
 		this.active=active;
 	}
 
