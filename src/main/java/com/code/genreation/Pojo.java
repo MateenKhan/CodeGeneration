@@ -59,7 +59,7 @@ public class Pojo {
 					throw new Exception("empty fieldName received:" + fieldName);
 				}
 				String fieldType = fieldObj.optString("type");
-				fieldType = getTypeString(fieldType,imports);
+				fieldType = Utilities.getTypeString(fieldType,imports);
 				fieldsStr += "\tprivate " + fieldType + " " + fieldName + ";\n";
 				getterStr += "\tpublic " + fieldType + " get" + Utilities.getCamelCase(fieldName) + "() {\n\t\treturn " + fieldName + ";\n\t}\n\n";
 				setterStr += "\tpublic void set" + Utilities.getCamelCase(fieldName) + "("+fieldType +" "+ fieldName+") {\n\t\tthis." + fieldName + "=" + fieldName + ";\n\t}\n\n";
@@ -84,47 +84,4 @@ public class Pojo {
 		}
 	}
 
-	/**
-	 * method used to get method String value which is prepended in pojo member
-	 * name
-	 * 
-	 * @param type
-	 * @return
-	 */
-	private static String getTypeString(String type,HashSet<String> imports) throws Exception {
-		try {
-			if (StringUtils.isEmpty(type)) {
-				throw new Exception("empty field type received:" + type);
-			}
-			switch (type) {
-			case "java.lang.String":
-			case "String":
-				return "String";
-			case "boolean":
-				return "boolean";
-			case "int":
-				return "int";
-			case "char":
-				return "char";
-			case "float":
-				return "float";
-			case "double":
-				return "double";
-			case "long":
-				return "long";
-			case "short":
-				return "short";
-			case "byte":
-				return "byte";
-			default:
-				break;
-			}
-		} catch (Exception e) {
-			LOGGER.error(e);
-			throw e;
-		}
-		return null;
-	}
-
-	
 }

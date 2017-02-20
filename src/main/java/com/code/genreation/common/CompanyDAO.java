@@ -1,14 +1,17 @@
 package com.code.genreation.common;
-
+import java.sql.Connection;
+import java.util.List;
 public interface CompanyDAO {
 
-	Company get(Company company);
+	Company get(Connection conn, Company company);
 
-	Company delete(Company company);
+	List<Company> getAll(Connection conn);
 
-	Company create(Company company);
+	Company delete(Connection conn, Company company);
 
-	Company update(Company company);
+	Company create(Connection conn, Company company);
+
+	Company update(Connection conn, Company company);
 
 
 }
