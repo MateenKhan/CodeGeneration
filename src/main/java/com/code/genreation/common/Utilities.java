@@ -60,6 +60,46 @@ public class Utilities {
 			LOGGER.error(e);
 		}
 	}
+
+	/**
+	 * method used to convert name to camel case used in setter and getter
+	 * 
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getCamelCase(String name) throws Exception {
+		try {
+			if (StringUtils.isEmpty(name)) {
+				throw new Exception("empty name received:" + name);
+			}
+			final StringBuilder result = new StringBuilder(name.length());
+			for (final String word : name.split(" ")) {
+				if (!StringUtils.isEmpty(word)) {
+					result.append(word.substring(0, 1).toUpperCase());
+					result.append(word.substring(1).toLowerCase());
+				}
+				if (!(result.length() == name.length()))
+					result.append(" ");
+			}
+			return result.toString();
+		} catch (Exception e) {
+			LOGGER.error(e);
+			throw e;
+		}
+	}
 	
+	public static String lowerFirstLetter(String str) throws Exception{
+		try {
+			if(StringUtils.isBlank(str)){
+				return null;
+			}
+			return (str.charAt(0)+"").toLowerCase()+str.substring(1);
+		} catch (Exception e) {
+			LOGGER.error(e);
+			throw e;
+		}
+		
+	}
 	
 }
