@@ -117,7 +117,7 @@ public class DaoImpl {
 			getMethodStr += "\t\t\t\t}\n\t\t\t}\n\t\t}";
 			getMethodStr += "catch(WebApplicationException e) {\n\t\t\tLOGGER.error(\"Error retrieving " + name.toLowerCase() + ":\" + " + name.toLowerCase()
 					+ ".getId() + \",  \", e);\n\t\t\tthrow e;\n";
-			getMethodStr += "\t\t}catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tUtilities.closeResultSet(rset);\n\t\t\tUtilities.closeStatement(pstmt);\n";
+			getMethodStr += "\t\t}catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeResultSet(rset);\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n";
 			getMethodStr += "\t\t}\n";
 			getMethodStr += exitedLog(name, "getAll");
 			getMethodStr += "\t\treturn "+name.toLowerCase()+";\n\t}\n\n";
@@ -156,7 +156,7 @@ public class DaoImpl {
 			getAllMethodStr += "\t\t\t\t\tresult.add("+name.toLowerCase()+");\n";
 			getAllMethodStr += "\t\t\t\t}\n\t\t\t}\n\t\t}";
 			getAllMethodStr += "catch(WebApplicationException e) {\n\t\t\tLOGGER.error(\"Error retrieving all " + name.toLowerCase() +"\"+  e);\n\t\t\tthrow e;\n";
-			getAllMethodStr += "\t\t}catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tUtilities.closeResultSet(rset);\n\t\t\tUtilities.closeStatement(pstmt);\n";
+			getAllMethodStr += "\t\t}catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeResultSet(rset);\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n";
 			getAllMethodStr += "\t\t}\n";
 			getAllMethodStr += exitedLog("", "getAll");
 			getAllMethodStr += "\t\treturn result;\n\t}\n\n";
@@ -182,7 +182,7 @@ public class DaoImpl {
 			deleteMethodStr += "\t\t\t\tif (rowCount == 0) {\n\t\t\t\t\tthrow new WebApplicationException(Utilities.constructResponse(\"no record deleted\", 500));\n\t\t\t\t}";
 			deleteMethodStr += "\t\t\t}\n\t\t} catch (WebApplicationException e) {\n\t\t\tLOGGER.error(\"Error deleting " + name.toLowerCase() + ":\" + " + name.toLowerCase()
 					+ ".getId() + \",  \", e);\n\t\t\tthrow e;\n";
-			deleteMethodStr += "\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tUtilities.closeStatement(pstmt);\n\t\t}";
+			deleteMethodStr += "\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}";
 			deleteMethodStr += exitedLog(name, "delete");
 			deleteMethodStr += "\t\treturn " + name.toLowerCase() + ";\n\t}\n\n";
 			return deleteMethodStr;
@@ -216,7 +216,7 @@ public class DaoImpl {
 			insertMethodStr += "\t\t\t\tif (rowCount == 0) {\n\t\t\t\t\tthrow new WebApplicationException(Utilities.constructResponse(\"no record inserted\", 500));\n\t\t\t\t}";
 			insertMethodStr += "\t\t\t}\n\t\t} catch (WebApplicationException e) {\n\t\t\tLOGGER.error(\"Error inserting " + name.toLowerCase() + ":\" + " + name.toLowerCase()
 					+ ".getId() + \",  \", e);\n\t\t\tthrow e;\n";
-			insertMethodStr += "\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tUtilities.closeStatement(pstmt);\n\t\t}";
+			insertMethodStr += "\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}";
 			insertMethodStr += exitedLog(name, "create");
 			insertMethodStr += "\t\treturn " + name.toLowerCase() + ";\n\t}\n";
 			return insertMethodStr;
@@ -254,7 +254,7 @@ public class DaoImpl {
 			updateMethodStr += "\t\t\t\tif (rowCount == 0) {\n\t\t\t\t\tthrow new WebApplicationException(Utilities.constructResponse(\"no record updated\", 500));\n\t\t\t\t}";
 			updateMethodStr += "\t\t\t}\n\t\t} catch (WebApplicationException e) {\n\t\t\tLOGGER.error(\"Error updating " + name.toLowerCase() + ":\" + " + name.toLowerCase()
 					+ ".getId() + \",  \", e);\n\t\t\tthrow e;\n";
-			updateMethodStr += "\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tUtilities.closeStatement(pstmt);\n\t\t}\n";
+			updateMethodStr += "\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(e);\n\t\t\tthrow new WebApplicationException(e);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n";
 			updateMethodStr += exitedLog(name, "update");
 			updateMethodStr += "\t\treturn " + name.toLowerCase() + ";\n\t}\n";
 			return updateMethodStr;

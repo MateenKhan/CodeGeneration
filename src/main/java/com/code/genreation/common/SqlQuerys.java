@@ -1,15 +1,5 @@
 package com.code.genreation.common;
 
-
-
-
-
-
-
-
-
-
-
 public class SqlQuerys{
 
 	public final class Company{

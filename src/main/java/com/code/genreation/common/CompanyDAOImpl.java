@@ -1,14 +1,15 @@
 package com.code.genreation.common;
-
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.ws.rs.WebApplicationException;
+
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
+import com.code.generation.database.mysql.DatabaseUtilities;
 
 public class CompanyDAOImpl implements CompanyDAO {
 
@@ -65,8 +66,8 @@ public class CompanyDAOImpl implements CompanyDAO {
 			LOGGER.error(e);
 			throw new WebApplicationException(e);
 		} finally {
-			Utilities.closeResultSet(rset);
-			Utilities.closeStatement(pstmt);
+			DatabaseUtilities.closeResultSet(rset);
+			DatabaseUtilities.closeStatement(pstmt);
 		}
 		LOGGER.debug("exited getAll:"+company);
 		return company;
@@ -114,8 +115,8 @@ public class CompanyDAOImpl implements CompanyDAO {
 			LOGGER.error(e);
 			throw new WebApplicationException(e);
 		} finally {
-			Utilities.closeResultSet(rset);
-			Utilities.closeStatement(pstmt);
+			DatabaseUtilities.closeResultSet(rset);
+			DatabaseUtilities.closeStatement(pstmt);
 		}
 		LOGGER.debug("exited getAll");
 		return result;
@@ -143,7 +144,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 			LOGGER.error(e);
 			throw new WebApplicationException(e);
 		} finally {
-			Utilities.closeStatement(pstmt);
+			DatabaseUtilities.closeStatement(pstmt);
 		}		LOGGER.debug("exited delete:"+company);
 		return company;
 	}
@@ -189,7 +190,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 			LOGGER.error(e);
 			throw new WebApplicationException(e);
 		} finally {
-			Utilities.closeStatement(pstmt);
+			DatabaseUtilities.closeStatement(pstmt);
 		}		LOGGER.debug("exited create:"+company);
 		return company;
 	}
@@ -234,7 +235,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 			LOGGER.error(e);
 			throw new WebApplicationException(e);
 		} finally {
-			Utilities.closeStatement(pstmt);
+			DatabaseUtilities.closeStatement(pstmt);
 		}
 		LOGGER.debug("exited update:"+company);
 		return company;

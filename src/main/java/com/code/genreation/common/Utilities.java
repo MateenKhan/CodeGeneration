@@ -1,8 +1,6 @@
 package com.code.genreation.common;
 
 import java.io.FileOutputStream;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashSet;
 
 import javax.ws.rs.core.MediaType;
@@ -166,23 +164,4 @@ public class Utilities {
 		return Response.status(statusHeader).entity(responseJSON.toString()).type(MediaType.APPLICATION_JSON_TYPE).build();
 	}
 
-	public static void closeStatement(Statement stmt) {
-		try {
-			if (stmt != null) {
-				stmt.close();
-			}
-		} catch (Exception ignore) {
-
-		}
-	}
-
-	public static void closeResultSet(ResultSet rset) {
-		try {
-			if (rset != null) {
-				rset.close();
-			}
-		} catch (Exception ignore) {
-
-		}
-	}
 }
