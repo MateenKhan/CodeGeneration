@@ -1,7 +1,13 @@
 package com.code.genreation.common;
 
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.sql.Statement;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.zip.ZipOutputStream;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -115,6 +121,26 @@ public class Utilities {
 		}
 
 	}
+	
+	/**
+	 * method used to lower the case of first character
+	 * 
+	 * @param str
+	 * @return
+	 * @throws Exception
+	 */
+	public static String capitalizeFirstLetter(String str) throws Exception {
+		try {
+			if (StringUtils.isBlank(str)) {
+				return null;
+			}
+			return (str.charAt(0) + "").toUpperCase() + str.substring(1);
+		} catch (Exception e) {
+			LOGGER.error(e);
+			throw e;
+		}
+
+	}
 
 	/**
 	 * method used to get method String value which is prepended in pojo member
@@ -164,4 +190,128 @@ public class Utilities {
 		return Response.status(statusHeader).entity(responseJSON.toString()).type(MediaType.APPLICATION_JSON_TYPE).build();
 	}
 
+	public static String getJavaTypeFromSql(int sqlType) throws Exception {
+		try {
+			switch (sqlType) {
+			case -7:
+			case 16:
+				return "boolean";
+			case -6:
+				return "byte";
+			case 5:
+				return "short";
+			case 4:
+				return "int";
+			case -5:
+				return "long";
+			case 6:
+			case 8:
+			case 3:
+				return "double";
+			case 7:
+				return "float";
+			case 2:
+				return "java.math.BigDecimal";
+			case 1:
+			case 12:
+			case -1:
+				return "String";
+			case 91:
+				return "java.sql.Date";
+			case 92:
+				return "java.sql.Time";
+			case 93:
+				return "java.sql.Timestamp";
+			case -2:
+			case -3:
+			case -4:
+				return "byte[]";
+			case 0:
+				return "NULL";
+			case 1111:
+				return "OTHER";
+			case 2000:
+				return "JAVA_OBJECT";
+			case 2001:
+				return "DISTINCT";
+			case 2002:
+				return "STRUCT";
+			case 2003:
+				return "ARRAY";
+			case 2004:
+				return "2004";
+			case 2005:
+				return "CLOB";
+			case 2006:
+				return "REF";
+			case 2007:
+				return "DATALINK";
+			case -8:
+				return "ROWID";
+			case -15:
+				return "NCHAR";
+			case -9:
+				return "NVARCHAR";
+			case -16:
+				return "LONGNVARCHAR";
+			case 2011:
+				return "NCLOB";
+			case 2009:
+				return "SQLXML";
+			case 2012:
+				return "REF_CURSOR";
+			case 2013:
+				return "TIME_WITH_TIMEZONE";
+			case 2014:
+				return "TIMESTAMP_WITH_TIMEZONE";
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+			throw e;
+		}
+		return null;
+	}
+
+	public static void deleteFilesAsync(List<File> files) {
+		try {
+			if (files != null && !files.isEmpty()) {
+				new Thread() {
+					@Override
+					public void run() {
+						Iterator<File> filesItr = files.iterator();
+						while (filesItr.hasNext()) {
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								LOGGER.error(e);
+							}
+							filesItr.next().delete();
+						}
+					}
+				}.start();
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+		}
+	}
+	
+	public static void closeZipOutputStream(ZipOutputStream zipOutputStream) {
+		try {
+			if (zipOutputStream != null) {
+				zipOutputStream.close();
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+		}
+	}
+	
+	public static void closeBufferedInputStream(BufferedInputStream bufferedInputStream) {
+		try {
+			if (bufferedInputStream != null) {
+				bufferedInputStream.close();
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+		}
+	}
 }

@@ -67,7 +67,7 @@ public class MySQLManager {
 		String fileName = PropertyManager.getProperty("mysql.pem_file_name");// "qount-mysql-server.pem";
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource(fileName).getFile());
-		// File file = new File("src/main/resources/"+fileName);
+//		 File file = new File("src/main/resources/"+fileName);
 		String SshKeyFilepath = file.getPath();
 		int localPort = Integer.parseInt(PropertyManager.getProperty("mysql.localPort"));
 		String remoteHost = PropertyManager.getProperty("mysql.localSSHUrl");// "127.0.0.1";

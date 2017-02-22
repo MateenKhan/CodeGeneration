@@ -1,6 +1,8 @@
 package com.code.genreation.common;
+
 import java.sql.Connection;
 import java.util.List;
+
 public interface CompanyDAO {
 
 	Company get(Connection conn, Company company);
@@ -12,6 +14,5 @@ public interface CompanyDAO {
 	Company create(Connection conn, Company company);
 
 	Company update(Connection conn, Company company);
-
 
 }

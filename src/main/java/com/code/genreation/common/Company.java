@@ -1,5 +1,4 @@
 package com.code.genreation.common;
-
 public class Company {
 
 	private String id;
@@ -99,79 +98,80 @@ public class Company {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.id=id;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name=name;
 	}
 
 	public void setEin(String ein) {
-		this.ein = ein;
+		this.ein=ein;
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		this.type=type;
 	}
 
 	public void setPhone_number(String phone_number) {
-		this.phone_number = phone_number;
+		this.phone_number=phone_number;
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+		this.address=address;
 	}
 
 	public void setCity(String city) {
-		this.city = city;
+		this.city=city;
 	}
 
 	public void setState(String state) {
-		this.state = state;
+		this.state=state;
 	}
 
 	public void setCountry(String country) {
-		this.country = country;
+		this.country=country;
 	}
 
 	public void setZipcode(String zipcode) {
-		this.zipcode = zipcode;
+		this.zipcode=zipcode;
 	}
 
 	public void setCurrency(String currency) {
-		this.currency = currency;
+		this.currency=currency;
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email=email;
 	}
 
 	public void setPayment_info(String payment_info) {
-		this.payment_info = payment_info;
+		this.payment_info=payment_info;
 	}
 
 	public void setCreatedby(String createdBy) {
-		this.createdBy = createdBy;
+		this.createdBy=createdBy;
 	}
 
 	public void setModifiedby(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
+		this.modifiedBy=modifiedBy;
 	}
 
 	public void setCreateddate(String createdDate) {
-		this.createdDate = createdDate;
+		this.createdDate=createdDate;
 	}
 
 	public void setModifieddate(String modifiedDate) {
-		this.modifiedDate = modifiedDate;
+		this.modifiedDate=modifiedDate;
 	}
 
 	public void setOwner(String owner) {
-		this.owner = owner;
+		this.owner=owner;
 	}
 
 	public void setActive(boolean active) {
-		this.active = active;
+		this.active=active;
 	}
+
 
 }

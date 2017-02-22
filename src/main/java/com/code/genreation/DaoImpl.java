@@ -2,9 +2,6 @@ package com.code.genreation;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.sql.ResultSet;
-import java.util.HashSet;
-import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,18 +24,15 @@ public class DaoImpl {
 		}
 	}
 
-	public static void createDaoImpl(JSONObject obj) throws Exception {
+	public static File createDaoImpl(JSONObject obj) throws Exception {
+		File f = null;
 		FileOutputStream fout = null;
 		try {
-			String location = obj.optString("location");
-			if (StringUtils.isEmpty(location)) {
-				throw new Exception("empty location received");
-			}
 			JSONArray fields = obj.optJSONArray("fields");
 			if (null == fields || fields.length() == 0) {
 				throw new Exception("empty fields received");
 			}
-			String name = obj.optString("name");
+			String name = Utilities.capitalizeFirstLetter(obj.optString("name"));
 			if (StringUtils.isEmpty(name)) {
 				throw new Exception("empty name received");
 			}
@@ -51,13 +45,7 @@ public class DaoImpl {
 			if (StringUtils.isEmpty(pkType)) {
 				throw new Exception("empty pkType received");
 			}
-			File f = new File(location + name + "DAOImpl.java");
-			f.createNewFile();
-			// if(!f.exists()){
-			// f.createNewFile();
-			// }else{
-			// throw new Exception("file at location exists:"+location);
-			// }
+			f = new File(name + "DAOImpl.java");
 			fout = new FileOutputStream(f);
 			if (lowerCaseFieldName) {
 				pk = pk.toLowerCase();
@@ -89,6 +77,7 @@ public class DaoImpl {
 		} finally {
 			Utilities.closeStream(fout);
 		}
+		return f;
 	}
 
 	private static String getMethodImplementation(String pkType, String pk,String name, JSONArray fields) throws Exception {

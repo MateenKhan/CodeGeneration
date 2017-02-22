@@ -24,29 +24,20 @@ public class Dao {
 		}
 	}
 
-	public static void createDao(JSONObject obj) throws Exception {
+	public static File createDao(JSONObject obj) throws Exception {
+		File file = null;
 		FileOutputStream fout = null;
 		try {
-			String location = obj.optString("location");
-			if (StringUtils.isEmpty(location)) {
-				throw new Exception("empty location received");
-			}
 			JSONArray fields = obj.optJSONArray("fields");
 			if (null == fields || fields.length() == 0) {
 				throw new Exception("empty fields received");
 			}
-			String name = obj.optString("name");
+			String name = Utilities.capitalizeFirstLetter(obj.optString("name"));
 			if (StringUtils.isEmpty(name)) {
 				throw new Exception("empty name received");
 			}
-			File f = new File(location + name + "DAO.java");
-			f.createNewFile();
-			// if(!f.exists()){
-			// f.createNewFile();
-			// }else{
-			// throw new Exception("file at location exists:"+location);
-			// }
-			fout = new FileOutputStream(f);
+			file = new File(name + "DAO.java");
+			fout = new FileOutputStream(file);
 			String methodStr = getMethods(name);
 			String importStr = getImports();
 			fout.write(importStr.getBytes());
@@ -59,6 +50,7 @@ public class Dao {
 		} finally {
 			Utilities.closeStream(fout);
 		}
+		return file;
 	}
 
 	public static String getImports() throws Exception {

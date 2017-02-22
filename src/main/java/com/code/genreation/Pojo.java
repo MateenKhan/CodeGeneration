@@ -25,28 +25,19 @@ public class Pojo {
 	}
 
 	@SuppressWarnings("resource")
-	public static void createPojo(JSONObject obj) throws Exception {
+	public static File createPojo(JSONObject obj) throws Exception {
+		File f = null;
 		FileOutputStream fout = null;
 		try {
-			String location = obj.optString("location");
-			if (StringUtils.isEmpty(location)) {
-				throw new Exception("empty location received");
-			}
 			JSONArray fields = obj.optJSONArray("fields");
 			if (null == fields || fields.length() == 0) {
 				throw new Exception("empty fields received");
 			}
-			String name = obj.optString("name");
+			String name = Utilities.capitalizeFirstLetter(obj.optString("name"));
 			if (StringUtils.isEmpty(name)) {
 				throw new Exception("empty name received");
 			}
-			File f = new File(location+name+".java");
-			f.createNewFile();
-			// if(!f.exists()){
-			// f.createNewFile();
-			// }else{
-			// throw new Exception("file at location exists:"+location);
-			// }
+			f = new File(name+".java");
 			fout = new FileOutputStream(f);
 			HashSet<String> imports = new  HashSet<String>();
 			String fieldsStr = "";
@@ -56,7 +47,7 @@ public class Pojo {
 				JSONObject fieldObj = fields.optJSONObject(i);
 				String fieldName = fieldObj.optString("name");
 				if (StringUtils.isEmpty(fieldName)) {
-					throw new Exception("empty fieldName received:" + fieldName);
+					throw new Exception("empty fieldName received:");
 				}
 				String fieldType = fieldObj.optString("type");
 				fieldType = Utilities.getTypeString(fieldType,imports);
@@ -82,6 +73,7 @@ public class Pojo {
 		} finally {
 			Utilities.closeStream(fout);
 		}
+		return f;
 	}
 
 }
