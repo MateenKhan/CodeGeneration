@@ -44,7 +44,6 @@ public class CodeGeneratorServlet extends HttpServlet {
 
 	private static final Logger LOGGER = Logger.getLogger(CodeGeneratorServlet.class);
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			processRequest(request, response);
@@ -68,13 +67,17 @@ public class CodeGeneratorServlet extends HttpServlet {
 		try {
 			String tableName = request.getParameter("table");
 			String dbName = request.getParameter("database");
+			String pk = request.getParameter("pk");
 			JSONObject requestObj = new JSONObject();
-			JSONArray fields = getTableDetails(tableName, dbName, requestObj);
+			if (!StringUtils.isEmpty(pk)) {
+				requestObj.put("pk", pk);
+			}
+			JSONArray fields = getTableDetails(pk, tableName, dbName, requestObj);
 			if (fields != null && fields.length() != 0) {
 				requestObj.put("fields", fields);
 				requestObj.put("name", tableName);
-			}else{
-				throw new Exception("unable to fetch fields for the table:"+tableName);
+			} else {
+				throw new Exception("unable to fetch fields for the table:" + tableName);
 			}
 			System.out.println(requestObj);
 			File pojo = Pojo.createPojo(requestObj);
@@ -128,7 +131,7 @@ public class CodeGeneratorServlet extends HttpServlet {
 		}
 	}
 
-	private JSONArray getTableDetails(String tableName, String dbName, JSONObject requestObj) {
+	private JSONArray getTableDetails(String pk, String tableName, String dbName, JSONObject requestObj) {
 		if (StringUtils.isEmpty(tableName)) {
 			return null;
 		}
@@ -146,14 +149,15 @@ public class CodeGeneratorServlet extends HttpServlet {
 			conn = DatabaseUtilities.getReadConnection();
 			ps = conn.prepareStatement("select * from `" + dbName + "`.`" + tableName + "` limit 1;");
 			rs = ps.executeQuery();
-			DatabaseMetaData dm = conn.getMetaData();
-			pkResultSet = dm.getExportedKeys("", "qount", tableName);
-			String pk = "";
-			if (pkResultSet.next()) {
-				pk = pkResultSet.getString("PKCOLUMN_NAME");
-			}
 			if (StringUtils.isEmpty(pk)) {
-				throw new Exception("single column pk is mandatory in the selected table");
+				DatabaseMetaData dm = conn.getMetaData();
+				pkResultSet = dm.getExportedKeys("", "qount", tableName);
+				if (pkResultSet.next()) {
+					pk = pkResultSet.getString("PKCOLUMN_NAME");
+				}
+				if (StringUtils.isEmpty(pk)) {
+					throw new Exception("single column pk is mandatory in the selected table");
+				}
 			}
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();

@@ -24,13 +24,15 @@
       select: function (a, b) {
           $("#result").text(b.item.value);
           $("#code").show(200);
+          $("#pk_div").show(200);
       }
     });
   } );
   function downloadCode(){
 	  var table = $("#result").text();
+	  var pk = $("#pk").val();
 	  url = window.location.protocol +"//"+window.location.host+""+window.location.pathname;
-	  url += "code?table="+table;
+	  url += "code?table="+table+"&pk="+pk;
 	  window.location.href = url;
 	  //window.open(url, "_self");
 	  //$("#codeDownload").attr("href",url).click();  
@@ -46,6 +48,9 @@
 </div>
 <button id="code" onclick="downloadCode()">Generate Code</button>
  <a href="" class="hidden" id="codeDownload"></a>
- 
+ <br/>
+ <div class ="hidden" id="pk_div">
+ 	pk :<input type="text" id="pk"/>
+ </div>
 </body>
 </html>

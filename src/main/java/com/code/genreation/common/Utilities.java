@@ -3,7 +3,6 @@ package com.code.genreation.common;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -155,9 +154,6 @@ public class Utilities {
 				throw new Exception("empty field type received:" + type);
 			}
 			switch (type) {
-			case "java.lang.String":
-			case "String":
-				return "String";
 			case "boolean":
 				return "boolean";
 			case "int":
@@ -174,14 +170,15 @@ public class Utilities {
 				return "short";
 			case "byte":
 				return "byte";
+			case "java.lang.String":
+			case "String":
 			default:
-				break;
+				return "String";
 			}
 		} catch (Exception e) {
 			LOGGER.error(e);
 			throw e;
 		}
-		return null;
 	}
 
 	public static Response constructResponse(String message, int statusHeader) {
