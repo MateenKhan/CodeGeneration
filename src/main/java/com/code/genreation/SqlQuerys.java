@@ -60,7 +60,7 @@ public class SqlQuerys {
 			} else {
 				tableName = name;
 			}
-			insertQry += "INSERT INTO " + tableName + " VALUES( ";
+			insertQry += "INSERT INTO " + tableName + " ( ";
 			updateQry += "UPDATE " + tableName + " SET ";
 			deleteQry += "DELETE FROM " + tableName + " WHERE ";
 			selectQry += "SELECT ";
