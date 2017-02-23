@@ -93,11 +93,11 @@ public class SqlQuerys {
 			String className = "SqlQuerys";
 			fout.write(("public class " + className + "{\n\n").getBytes());
 			fout.write(("\tpublic final class " + name + "{\n\n").getBytes());
-			fout.write(("\t\tpublic static final String INSERT_QRY = \"" + insertQry + "\";\n\n").getBytes());
-			fout.write(("\t\tpublic static final String UPDATE_QRY = \"" + updateQry + "\";\n\n").getBytes());
-			fout.write(("\t\tpublic static final String DELETE_QRY = \"" + deleteQry + "\";\n\n").getBytes());
-			fout.write(("\t\tpublic static final String GET_QRY = \"" + selectQry + "\";\n\n").getBytes());
-			fout.write(("\t\tpublic static final String GET_ALL_QRY = \"" + selectAllQry + "\";\n\n").getBytes());
+			fout.write(("\t\tpublic static final String INSERT_QRY = \"" + insertQry + "\";\n").getBytes());
+			fout.write(("\t\tpublic static final String UPDATE_QRY = \"" + updateQry + "\";\n").getBytes());
+			fout.write(("\t\tpublic static final String DELETE_QRY = \"" + deleteQry + "\";\n").getBytes());
+			fout.write(("\t\tpublic static final String GET_QRY = \"" + selectQry + "\";\n").getBytes());
+			fout.write(("\t\tpublic static final String GET_ALL_QRY = \"" + selectAllQry + "\";\n").getBytes());
 			fout.write(("\t}\n}").getBytes());
 			
 		} catch (Exception e) {

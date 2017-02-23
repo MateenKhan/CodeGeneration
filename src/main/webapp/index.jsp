@@ -50,7 +50,7 @@
  <a href="" class="hidden" id="codeDownload"></a>
  <br/>
  <div class ="hidden" id="pk_div">
- 	pk :<input type="text" id="pk"/>
+ 	pk :<input type="text" id="pk" value="id"/>
  </div>
 </body>
 </html>

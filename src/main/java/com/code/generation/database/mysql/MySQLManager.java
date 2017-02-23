@@ -9,7 +9,6 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import com.code.genreation.common.PropertyManager;
-import com.code.genreation.common.Utilities;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
