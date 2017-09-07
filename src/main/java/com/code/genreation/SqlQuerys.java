@@ -37,7 +37,6 @@ public class SqlQuerys {
 			if (StringUtils.isEmpty(name)) {
 				throw new Exception("empty name received");
 			}
-			boolean lowerCaseName = obj.optBoolean("lowerCaseName");
 			boolean lowerCaseFieldName = obj.optBoolean("lowerCaseFieldName");
 			String pk = obj.optString("pk");
 			if (StringUtils.isEmpty(pk)) {
@@ -55,11 +54,7 @@ public class SqlQuerys {
 			if (lowerCaseFieldName) {
 				pk = pk.toLowerCase();
 			}
-			if (lowerCaseName) {
-				tableName = name.toLowerCase();
-			} else {
-				tableName = name;
-			}
+			tableName = name.toLowerCase();
 			insertQry += "INSERT INTO " + tableName + " ( ";
 			updateQry += "UPDATE " + tableName + " SET ";
 			deleteQry += "DELETE FROM " + tableName + " WHERE ";

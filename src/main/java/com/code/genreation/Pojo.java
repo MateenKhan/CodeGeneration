@@ -33,11 +33,11 @@ public class Pojo {
 			if (null == fields || fields.length() == 0) {
 				throw new Exception("empty fields received");
 			}
-			String name = Utilities.capitalizeFirstLetter(obj.optString("name"));
-			if (StringUtils.isEmpty(name)) {
+			String pojoFileName = Utilities.capitalizeFirstLetter(obj.optString("name"));
+			if (StringUtils.isEmpty(pojoFileName)) {
 				throw new Exception("empty name received");
 			}
-			f = new File(name+".java");
+			f = new File(pojoFileName+".java");
 			fout = new FileOutputStream(f);
 			HashSet<String> imports = new  HashSet<String>();
 			String fieldsStr = "";
@@ -62,7 +62,7 @@ public class Pojo {
 				importStr="import "+importsItr.next()+";\n";
 			}
 			fout.write(importStr.getBytes());
-			fout.write(("public class " + name + " {\n\n").getBytes());
+			fout.write(("public class " + pojoFileName + " {\n\n").getBytes());
 			fout.write((fieldsStr+"\n").getBytes());
 			fout.write((getterStr).getBytes());
 			fout.write((setterStr+"\n").getBytes());
