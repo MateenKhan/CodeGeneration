@@ -32,7 +32,7 @@
 	  var table = $("#result").text();
 	  var pk = $("#pk").val();
 	  url = window.location.protocol +"//"+window.location.host+""+window.location.pathname;
-	  url += "code?table="+table+"&pk="+pk;
+	  url += "code?table="+table+"&pk="+pk+"&database=accounting";
 	  window.location.href = url;
 	  //window.open(url, "_self");
 	  //$("#codeDownload").attr("href",url).click();  

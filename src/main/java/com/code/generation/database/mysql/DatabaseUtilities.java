@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import com.code.genreation.common.PropertyManager;
 import com.jcraft.jsch.Session;
 
 public class DatabaseUtilities {
@@ -23,7 +24,12 @@ public class DatabaseUtilities {
 	private static Connection getConnection() {
 		Connection connection = null;
 		try {
-			DataSource dataSource = MySQLManager.getInstance().getDataSource();
+			DataSource dataSource = null;
+			if(PropertyManager.getProperty("mysql.connect.to.local").equals("true")){
+				dataSource = LocalMysqlManager.getInstance().getDataSource();
+			}else{
+				dataSource = MySQLManager.getInstance().getDataSource();
+			}
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(dataSource.getClass().getName());
 			}

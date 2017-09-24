@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServlet;
 import org.json.JSONArray;
 
 import com.code.generation.database.mysql.DatabaseUtilities;
+import com.code.generation.database.mysql.LocalMysqlManager;
 import com.code.generation.database.mysql.MySQLManager;
 import com.code.genreation.common.Log4jLoder;
+import com.code.genreation.common.PropertyManager;
 
 
 /**
@@ -32,7 +34,11 @@ public class ConfigurationLoaderServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		Log4jLoder.getLog4jLoder().initilializeLogging();
 		try {
-			Class.forName(MySQLManager.class.getName());
+			if(PropertyManager.getProperty("mysql.connect.to.local").equals("true")){
+				Class.forName(LocalMysqlManager.class.getName());
+			}else{
+				Class.forName(MySQLManager.class.getName());
+			}
 			getTablesList(config);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
