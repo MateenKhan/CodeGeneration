@@ -44,22 +44,25 @@ public class SqlQuerys {
 			}
 			f = new File("SqlQuerys.java");
 			fout = new FileOutputStream(f);
-			String insertQry = "";
-			String insertQryValues = "";
-			String updateQry = "";
-			String deleteQry = "";
-			String selectQry = "";
-			String selectAllQry = "";
-			String tableName;
+			StringBuilder finalCode = new StringBuilder();
+			StringBuilder insertQry = new StringBuilder("");
+			StringBuilder insertQryValues = new StringBuilder("");
+			StringBuilder updateQry = new StringBuilder("");
+			StringBuilder deleteQry = new StringBuilder("");
+			StringBuilder selectQry = new StringBuilder("");
+			StringBuilder selectAllQry = new StringBuilder("");
+			StringBuilder tableName = new StringBuilder("");
 			if (lowerCaseFieldName) {
 				pk = pk.toLowerCase();
 			}
-			tableName = name.toLowerCase();
-			insertQry += "INSERT INTO " + tableName + " ( ";
-			updateQry += "UPDATE " + tableName + " SET ";
-			deleteQry += "DELETE FROM " + tableName + " WHERE ";
-			selectQry += "SELECT ";
-			selectAllQry += "SELECT * FROM " + tableName + ";";
+			tableName.append(name.toLowerCase());
+			StringBuilder deleteByIdsQry = new StringBuilder("");
+			deleteByIdsQry.append("DELETE FROM " + tableName +" WHERE `id` IN (");
+			insertQry.append("INSERT INTO " + tableName + " ( ");
+			updateQry.append("UPDATE " + tableName + " SET ");
+			deleteQry.append("DELETE FROM " + tableName );
+			selectQry.append("SELECT ");
+			selectAllQry.append("SELECT ");
 			for (int i = 0; i < fields.length(); i++) {
 				JSONObject fieldObj = fields.optJSONObject(i);
 				String fieldName = fieldObj.optString("name");
@@ -69,32 +72,36 @@ public class SqlQuerys {
 				if (StringUtils.isEmpty(fieldName)) {
 					throw new Exception("empty fieldName received:" + fieldName);
 				}
-				insertQry += "`" + fieldName + "`, ";
-				selectQry += "`" + fieldName + "`, ";
-				insertQryValues += "?, ";
+				insertQry.append("`" + fieldName + "`, ");
+				selectQry.append("`" + fieldName + "`, ");
+				selectAllQry.append("`" + fieldName + "`, ");
+				insertQryValues.append("?, ");
 				if (!fieldName.equals(pk)) {
-					updateQry += "`" + fieldName + "` = ?, ";
+					updateQry.append("`" + fieldName + "` = ?, ");
 				}
 			}
-			insertQry = insertQry.substring(0, insertQry.length() - 2);
-			insertQry += " ) VALUES( " + insertQryValues;
-			insertQry = insertQry.substring(0, insertQry.length() - 2);
-			insertQry += " );";
-			updateQry = updateQry.substring(0, updateQry.length() - 2);
-			updateQry += " WHERE `" + pk + "` = ?;";
-			deleteQry += " WHERE `" + pk + "` = ?;";
-			selectQry = selectQry.substring(0, selectQry.length() - 2);
-			selectQry += " from `" + tableName + "` WHERE `" + pk + "` = ?;";
+			insertQry = new StringBuilder(insertQry.substring(0, insertQry.length() - 2));
+			insertQry.append(" ) VALUES( " + insertQryValues);
+			insertQry = new StringBuilder(insertQry.substring(0, insertQry.length() - 2));
+			insertQry.append(" );");
+			updateQry = new StringBuilder(updateQry.substring(0, updateQry.length() - 2));
+			updateQry.append(" WHERE `" + pk + "` = ?;");
+			deleteQry.append(" WHERE `" + pk + "` = ?;");
+			selectQry = new StringBuilder(selectQry.substring(0, selectQry.length() - 2));
+			selectAllQry = new StringBuilder(selectAllQry.substring(0, selectAllQry.length() - 2));
+			selectQry.append(" FROM `" + tableName + "` WHERE `" + pk + "` = ?;");
+			selectAllQry.append(" FROM " + tableName + " where created_by = ? and company_id = ?;");
 			String className = "SqlQuerys";
-			fout.write(("public class " + className + "{\n\n").getBytes());
-			fout.write(("\tpublic final class " + name + "{\n\n").getBytes());
-			fout.write(("\t\tpublic static final String INSERT_QRY = \"" + insertQry + "\";\n").getBytes());
-			fout.write(("\t\tpublic static final String UPDATE_QRY = \"" + updateQry + "\";\n").getBytes());
-			fout.write(("\t\tpublic static final String DELETE_QRY = \"" + deleteQry + "\";\n").getBytes());
-			fout.write(("\t\tpublic static final String GET_QRY = \"" + selectQry + "\";\n").getBytes());
-			fout.write(("\t\tpublic static final String GET_ALL_QRY = \"" + selectAllQry + "\";\n").getBytes());
-			fout.write(("\t}\n}").getBytes());
-			
+			finalCode.append("\n\npublic class ").append(className).append("{\n\n")
+			.append("\tpublic final class ").append(name).append("{\n\n")
+			.append("\t\tpublic static final String INSERT_QRY = \"").append(insertQry).append("\";\n")
+			.append("\t\tpublic static final String UPDATE_QRY = \"").append(updateQry).append("\";\n")
+			.append("\t\tpublic static final String DELETE_QRY = \"").append(deleteQry).append("\";\n")
+			.append("\t\tpublic static final String DELETE_BY_IDS_QRY = \"").append(deleteByIdsQry).append("\";\n")
+			.append("\t\tpublic static final String GET_QRY = \"").append(selectQry).append("\";\n")
+			.append("\t\tpublic static final String GET_ALL_QRY = \"").append(selectAllQry).append("\";\n")
+			.append("\t}\n}");
+			fout.write((finalCode.toString()).getBytes());
 		} catch (Exception e) {
 			LOGGER.error(e);
 			throw e;

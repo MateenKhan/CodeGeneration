@@ -121,6 +121,26 @@ public class Utilities {
 
 	}
 	
+	public static String createObject(String className) throws Exception {
+		try {
+			if (StringUtils.isBlank(className)) {
+				return null;
+			}
+			StringBuilder result = new StringBuilder();
+			result.append(className);
+			result.append(" ");
+			result.append(lowerFirstLetter(className));
+			result.append(" = new ");
+			result.append(className);
+			result.append("();");
+			return result.toString();
+		} catch (Exception e) {
+			LOGGER.error(e);
+			throw e;
+		}
+		
+	}
+	
 	/**
 	 * method used to lower the case of first character
 	 * 

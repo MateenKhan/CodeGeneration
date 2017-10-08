@@ -39,10 +39,11 @@ public class Pojo {
 			}
 			f = new File(pojoFileName+".java");
 			fout = new FileOutputStream(f);
+			StringBuilder finalCode = new StringBuilder();
 			HashSet<String> imports = new  HashSet<String>();
-			String fieldsStr = "";
-			String getterStr = "";
-			String setterStr = "";
+			StringBuilder fieldsStr = new StringBuilder("");
+			StringBuilder getterStr = new StringBuilder("");
+			StringBuilder setterStr = new StringBuilder("");
 			for (int i = 0; i < fields.length(); i++) {
 				JSONObject fieldObj = fields.optJSONObject(i);
 				String fieldName = fieldObj.optString("name");
@@ -51,9 +52,13 @@ public class Pojo {
 				}
 				String fieldType = fieldObj.optString("type");
 				fieldType = Utilities.getTypeString(fieldType,imports);
-				fieldsStr += "\tprivate " + fieldType + " " + fieldName + ";\n";
-				getterStr += "\tpublic " + fieldType + " get" + Utilities.getCamelCase(fieldName) + "() {\n\t\treturn " + fieldName + ";\n\t}\n\n";
-				setterStr += "\tpublic void set" + Utilities.getCamelCase(fieldName) + "("+fieldType +" "+ fieldName+") {\n\t\tthis." + fieldName + "=" + fieldName + ";\n\t}\n\n";
+				fieldsStr.append("\tprivate ").append(fieldType).append(" ").append(fieldName + ";\n");
+				getterStr.append("\tpublic ").append(fieldType).append(" get")
+				.append(Utilities.getCamelCase(fieldName)).append("() {\n\t\treturn ").append(fieldName)
+				.append(";\n\t}\n\n");
+				setterStr.append("\tpublic void set").append(Utilities.getCamelCase(fieldName))
+				.append("(").append(fieldType).append(" ").append(fieldName).append(") {\n\t\tthis.")
+				.append(fieldName).append("=").append(fieldName).append(";\n\t}\n\n");
 
 			}
 			Iterator<String> importsItr = imports.iterator();
@@ -61,12 +66,13 @@ public class Pojo {
 			while(importsItr.hasNext()){
 				importStr="import "+importsItr.next()+";\n";
 			}
-			fout.write(importStr.getBytes());
-			fout.write(("public class " + pojoFileName + " {\n\n").getBytes());
-			fout.write((fieldsStr+"\n").getBytes());
-			fout.write((getterStr).getBytes());
-			fout.write((setterStr+"\n").getBytes());
-			fout.write("}".getBytes());
+			finalCode.append("\n\n").append(importStr)
+			.append("public class ").append(pojoFileName).append(" {\n\n")
+			.append(fieldsStr).append("\n")
+			.append(getterStr)
+			.append(setterStr).append("\n")
+			.append("}");
+			fout.write((finalCode.toString()).getBytes());
 		} catch (Exception e) {
 			LOGGER.error(e);
 			throw e;

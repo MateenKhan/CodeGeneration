@@ -13,6 +13,7 @@ import com.code.genreation.common.Utilities;
 public class Dao {
 
 	private static final Logger LOGGER = Logger.getLogger(Dao.class);
+	private static final String IMPORTS = "\n\nimport java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.util.List;\n\n";
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -36,14 +37,12 @@ public class Dao {
 			if (StringUtils.isEmpty(name)) {
 				throw new Exception("empty name received");
 			}
+			StringBuilder finalCode = new StringBuilder();
 			file = new File(name + "DAO.java");
 			fout = new FileOutputStream(file);
-			String methodStr = getMethods(name);
-			String importStr = getImports();
-			fout.write(importStr.getBytes());
-			fout.write(("public interface " + name + "DAO {\n\n").getBytes());
-			fout.write((methodStr + "\n").getBytes());
-			fout.write("}".getBytes());
+			StringBuilder methodStr = getMethods(name);
+			finalCode.append(IMPORTS).append("public interface ").append(name).append("DAO {\n\n").append(methodStr + "\n").append("}");
+			fout.write((finalCode.toString()).getBytes());
 		} catch (Exception e) {
 			LOGGER.error(e);
 			throw e;
@@ -53,25 +52,11 @@ public class Dao {
 		return file;
 	}
 
-	public static String getImports() throws Exception {
+	public static StringBuilder getMethods(String name) throws Exception {
 		try {
-			String importStr = "";
-			importStr = "import java.sql.Connection;\nimport java.sql.PreparedStatement;\nimport java.sql.ResultSet;\nimport java.util.List;\n";
-			return importStr;
-		} catch (Exception e) {
-			LOGGER.error(e);
-			throw e;
-		}
-	}
-
-	public static String getMethods(String name) throws Exception {
-		try {
-			String methodStr = "";
-			methodStr += getMethodStr(name);
-			methodStr += getAllMethodStr(name);
-			methodStr += deleteMethodStr(name);
-			methodStr += createMethodStr(name);
-			methodStr += updateMethodStr(name);
+			StringBuilder methodStr = new StringBuilder();
+			methodStr.append(getMethodStr(name)).append(getAllMethodStr(name)).append(deleteMethodStr(name)).append(deleteByIdsMethodStr(name)).append(createMethodStr(name))
+					.append(updateMethodStr(name));
 			return methodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -81,14 +66,15 @@ public class Dao {
 
 	/**
 	 * used to get Method as String argument must be the pojo name
+	 * 
 	 * @param name
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getMethodStr(String name) throws Exception {
+	public static StringBuilder getMethodStr(String name) throws Exception {
 		try {
-			String methodStr = "";
-			methodStr += "\t" + name + " get(Connection conn, " + name + " " + Utilities.lowerFirstLetter(name) + ");\n\n";
+			StringBuilder methodStr = new StringBuilder();
+			methodStr.append("\t").append(name).append(" get(Connection conn, ").append(name).append(" ").append(Utilities.lowerFirstLetter(name)).append(");\n\n");
 			return methodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -96,10 +82,10 @@ public class Dao {
 		}
 	}
 
-	public static String getAllMethodStr(String name) throws Exception {
+	public static StringBuilder getAllMethodStr(String name) throws Exception {
 		try {
-			String methodStr = "";
-			methodStr += "\tList<" + name + "> getAll(Connection conn);\n\n";
+			StringBuilder methodStr = new StringBuilder();
+			methodStr.append("\tList<").append(name).append("> getAll(Connection conn, ").append(name).append(" input);\n\n");
 			return methodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -107,10 +93,10 @@ public class Dao {
 		}
 	}
 
-	public static String deleteMethodStr(String name) throws Exception {
+	public static StringBuilder deleteMethodStr(String name) throws Exception {
 		try {
-			String methodStr = "";
-			methodStr += "\t" + name + " delete(Connection conn, " + name + " " + Utilities.lowerFirstLetter(name) + ");\n\n";
+			StringBuilder methodStr = new StringBuilder();
+			methodStr.append("\t").append(name).append(" delete(Connection conn, ").append(name).append(" ").append(Utilities.lowerFirstLetter(name)).append(");\n\n");
 			return methodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -118,10 +104,10 @@ public class Dao {
 		}
 	}
 
-	public static String createMethodStr(String name) throws Exception {
+	public static StringBuilder deleteByIdsMethodStr(String name) throws Exception {
 		try {
-			String methodStr = "";
-			methodStr += "\t" + name + " create(Connection conn, " + name + " " + Utilities.lowerFirstLetter(name) + ");\n\n";
+			StringBuilder methodStr = new StringBuilder();
+			methodStr.append("\tboolean deleteByIds(Connection conn, String commaSeparatedIds);\n\n");
 			return methodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -129,10 +115,21 @@ public class Dao {
 		}
 	}
 
-	public static String updateMethodStr(String name) throws Exception {
+	public static StringBuilder createMethodStr(String name) throws Exception {
 		try {
-			String methodStr = "";
-			methodStr += "\t" + name + " update(Connection conn, " + name + " " + Utilities.lowerFirstLetter(name) + ");\n\n";
+			StringBuilder methodStr = new StringBuilder();
+			methodStr.append("\t").append(name).append(" create(Connection conn, ").append(name).append(" ").append(Utilities.lowerFirstLetter(name)).append(");\n\n");
+			return methodStr;
+		} catch (Exception e) {
+			LOGGER.error(e);
+			throw e;
+		}
+	}
+
+	public static StringBuilder updateMethodStr(String name) throws Exception {
+		try {
+			StringBuilder methodStr = new StringBuilder();
+			methodStr.append("\t").append(name).append(" update(Connection conn, ").append(name).append(" ").append(Utilities.lowerFirstLetter(name)).append(");\n\n");
 			return methodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);

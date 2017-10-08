@@ -29,6 +29,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.code.generation.database.mysql.DatabaseUtilities;
+import com.code.genreation.Controller;
+import com.code.genreation.ControllerImpl;
 import com.code.genreation.Dao;
 import com.code.genreation.DaoImpl;
 import com.code.genreation.Pojo;
@@ -84,6 +86,8 @@ public class CodeGeneratorServlet extends HttpServlet {
 			File dao = Dao.createDao(requestObj);
 			File daoImpl = DaoImpl.createDaoImpl(requestObj);
 			File sqlQuerys = SqlQuerys.createSqlQuerys(requestObj);
+			File controller = Controller.createController(requestObj);
+			File controllerImpl = ControllerImpl.createControllerImpl(requestObj);
 			// Set the content type based to zip
 			response.setContentType("Content-type: text/zip");
 			response.setHeader("Content-Disposition", "attachment; filename=code.zip");
@@ -94,6 +98,8 @@ public class CodeGeneratorServlet extends HttpServlet {
 			files.add(dao);
 			files.add(daoImpl);
 			files.add(sqlQuerys);
+			files.add(controller);
+			files.add(controllerImpl);
 			ServletOutputStream out = response.getOutputStream();
 			zos = new ZipOutputStream(new BufferedOutputStream(out));
 			for (File file : files) {
