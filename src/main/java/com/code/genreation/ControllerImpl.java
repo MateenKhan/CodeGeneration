@@ -46,7 +46,8 @@ public class ControllerImpl {
 			if (StringUtils.isEmpty(pkType)) {
 				throw new Exception("empty pkType received");
 			}
-			f = new File(name+"ControllerImpl.java");
+			String fileLocaiton = PropertyManager.getProperty("temp.file.location");
+			f = new File(fileLocaiton+name+"ControllerImpl.java");
 			fout = new FileOutputStream(f);
 			if (lowerCaseFieldName) {
 				pk = pk.toLowerCase();
@@ -61,8 +62,6 @@ public class ControllerImpl {
 			StringBuilder updateMethodStr = updateMethodImplementation(name);
 
 			finalCode.append(IMPORTS)
-			.append("\n@Api(value = \"").append(name).append(" Controller\")")
-			.append("\n@Path(\"/users/{userId}/companies/{companyId}/").append(Utilities.lowerFirstLetter(name)).append("\")")
 			.append("\npublic class ").append(className).append(" {\n\n")
 			.append("\tprivate static Logger LOGGER = Logger.getLogger(").append(className).append(".class);\n\n")
 			.append(getMethodStr)

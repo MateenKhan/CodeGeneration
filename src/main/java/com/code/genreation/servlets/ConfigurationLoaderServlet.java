@@ -39,15 +39,16 @@ public class ConfigurationLoaderServlet extends HttpServlet {
 			}else{
 				Class.forName(MySQLManager.class.getName());
 			}
-			getTablesList(config);
+			loadTablesList(config);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void getTablesList(ServletConfig config){
+	public static void loadTablesList(ServletConfig config){
+		Connection conn = null;
 		try {
-			Connection conn = DatabaseUtilities.getReadConnection();
+			conn = DatabaseUtilities.getReadConnection();
 			ResultSet rs = conn.createStatement().executeQuery("show tables;");
 			JSONArray tablesList = new JSONArray();
 			while(rs.next()){
@@ -57,6 +58,8 @@ public class ConfigurationLoaderServlet extends HttpServlet {
 			config.getServletContext().setAttribute("tables", tablesList);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			DatabaseUtilities.closeConnection(conn);
 		}
 	}
 

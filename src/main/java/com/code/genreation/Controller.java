@@ -46,7 +46,8 @@ public class Controller {
 			if (StringUtils.isEmpty(pkType)) {
 				throw new Exception("empty pkType received");
 			}
-			f = new File(name+"Controller.java");
+			String fileLocaiton = PropertyManager.getProperty("temp.file.location");
+			f = new File(fileLocaiton+name+"Controller.java");
 			System.out.println(f.getAbsolutePath());
 			fout = new FileOutputStream(f);
 			if (lowerCaseFieldName) {
@@ -112,7 +113,7 @@ public class Controller {
 			.append("\n\tpublic List<"+name+"> get").append(name)
 			.append("s").append("(@NotNull @PathParam(\"userId\") String userId,@NotNull @PathParam(\"companyId\") String companyId){")
 			.append("\n\t\treturn ").append(className).append("Impl.get").append(name).append("s(userId, companyId);")
-			.append("\n\t}");
+			.append("\n\t}\n");
 			return getAllMethodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -129,7 +130,7 @@ public class Controller {
 			.append("\n\tpublic Response delete").append(name)
 			.append("(@NotNull @PathParam(\"userId\") String userId,@NotNull @PathParam(\"companyId\") String companyId ,@NotNull @PathParam(\"id\") String id){")
 			.append("\n\t\treturn ").append(className).append("Impl.delete").append(name).append("(userId, companyId, id);")
-			.append("\n\t}");
+			.append("\n\t}\n");
 			return result;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -147,7 +148,7 @@ public class Controller {
 			.append("(@NotNull @PathParam(\"userId\") String userId,@NotNull @PathParam(\"companyId\") String companyId , List<String> ids){")
 			.append("\n\t\treturn ").append(className).append("Impl.delete").append(name)
 			.append("s(userId, companyId, ids);")
-			.append("\n\t}");
+			.append("\n\t}\n");
 			return result;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -164,7 +165,7 @@ public class Controller {
 			.append("\n\tpublic Response create").append(name).append("(@NotNull @PathParam(\"userId\") String userId,@NotNull @PathParam(\"companyId\") String companyId,")
 			.append(name).append(" ").append(Utilities.lowerFirstLetter(name)).append("){")
 			.append("\n\t\treturn ").append(className).append("Impl.create").append(name).append("(userId, companyId, ").append(Utilities.lowerFirstLetter(name)).append(");")
-			.append("\n\t}");
+			.append("\n\t}\n");
 			return insertMethodStr;
 		} catch (Exception e) {
 			LOGGER.error(e);
@@ -181,7 +182,7 @@ public class Controller {
 			.append("\n\tpublic Response update").append(name).append("(@NotNull @PathParam(\"userId\") String userId,@NotNull @PathParam(\"companyId\") String companyId ,@NotNull @PathParam(\"id\") String id,")
 			.append(name).append(" ").append(name).append("){")
 			.append("\n\t\treturn ").append(className).append("Impl.update").append(name).append("(userId, companyId, id, ").append(name).append(");")
-			.append("\n\t}");
+			.append("\n\t}\n");
 			return result;
 		} catch (Exception e) {
 			LOGGER.error(e);

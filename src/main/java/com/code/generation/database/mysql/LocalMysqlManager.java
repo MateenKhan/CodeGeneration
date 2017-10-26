@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
+import com.code.genreation.common.PropertyManager;
+
 public class LocalMysqlManager {
 
 	private static final Logger LOGGER = Logger.getLogger(LocalMysqlManager.class);
@@ -21,9 +23,10 @@ public class LocalMysqlManager {
 	
 	private DataSource createDataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUrl("jdbc:mysql://localhost:3306/accounting");
-		dataSource.setUsername("root");
-		dataSource.setPassword("root");
+		String databaseName = PropertyManager.getProperty("local.dbname");
+		dataSource.setUrl(PropertyManager.getProperty("local.url")+databaseName);
+		dataSource.setUsername(PropertyManager.getProperty("local.username"));
+		dataSource.setPassword(PropertyManager.getProperty("local.password"));
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		dataSource.setMaxOpenPreparedStatements(100);
 		dataSource.setInitialSize(5);

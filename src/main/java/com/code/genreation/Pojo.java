@@ -37,7 +37,9 @@ public class Pojo {
 			if (StringUtils.isEmpty(pojoFileName)) {
 				throw new Exception("empty name received");
 			}
-			f = new File(pojoFileName+".java");
+			String fileLocaiton = PropertyManager.getProperty("temp.file.location");
+			f = new File(fileLocaiton+pojoFileName+".java");
+			System.out.println(f.getAbsolutePath());
 			fout = new FileOutputStream(f);
 			StringBuilder finalCode = new StringBuilder();
 			HashSet<String> imports = new  HashSet<String>();
@@ -71,6 +73,7 @@ public class Pojo {
 			.append(fieldsStr).append("\n")
 			.append(getterStr)
 			.append(setterStr).append("\n")
+			.append("\n\t@Override\n\tpublic String toString() {\n\t\ttry {\n\t\t\treturn new ObjectMapper().writeValueAsString(this);\n\t\t} catch (Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t\t\treturn super.toString();\n\t}\n")
 			.append("}");
 			fout.write((finalCode.toString()).getBytes());
 		} catch (Exception e) {

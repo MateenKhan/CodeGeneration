@@ -32,15 +32,30 @@
 	  var table = $("#result").text();
 	  var pk = $("#pk").val();
 	  url = window.location.protocol +"//"+window.location.host+""+window.location.pathname;
-	  url += "code?table="+table+"&pk="+pk+"&database=accounting";
+	  url += "code?table="+table+"&pk="+pk;
 	  window.location.href = url;
-	  //window.open(url, "_self");
-	  //$("#codeDownload").attr("href",url).click();  
+  }
+  
+  function loadNewTables(){
+	  $.ajax({
+			type : "POST",
+			url : window.location.protocol +"//"+window.location.host+""+window.location.pathname+"load",
+			contentType : "application/json; charset=utf-8",
+			success : function(data) {
+				if(data){
+		            $( "#tags" ).autocomplete('option', 'source', JSON.parse(data));
+				}
+			},
+			error : function(data) {
+				showError(data)
+			}
+	});
   }
   </script>
 </head>
 <body>
  
+<button id="loadNewTables" onclick="loadNewTables()">Load New Tables</button>
  <h1 id="result"></h1>
 <div class="ui-widget">
   <label for="tags">Tags: </label>

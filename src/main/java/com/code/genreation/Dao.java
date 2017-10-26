@@ -38,7 +38,8 @@ public class Dao {
 				throw new Exception("empty name received");
 			}
 			StringBuilder finalCode = new StringBuilder();
-			file = new File(name + "DAO.java");
+			String fileLocaiton = PropertyManager.getProperty("temp.file.location");
+			file = new File(fileLocaiton+name + "DAO.java");
 			fout = new FileOutputStream(file);
 			StringBuilder methodStr = getMethods(name);
 			finalCode.append(IMPORTS).append("public interface ").append(name).append("DAO {\n\n").append(methodStr + "\n").append("}");

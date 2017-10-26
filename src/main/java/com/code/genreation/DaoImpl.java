@@ -46,7 +46,8 @@ public class DaoImpl {
 			if (StringUtils.isEmpty(pkType)) {
 				throw new Exception("empty pkType received");
 			}
-			f = new File(name + "DAOImpl.java");
+			String fileLocaiton = PropertyManager.getProperty("temp.file.location");
+			f = new File(fileLocaiton+name + "DAOImpl.java");
 			fout = new FileOutputStream(f);
 			if (lowerCaseFieldName) {
 				pk = pk.toLowerCase();
@@ -106,7 +107,7 @@ public class DaoImpl {
 			}
 			getMethodStr.append("\t\t\t\t}\n\t\t\t}")
 			.append("\n\t\t}catch (Exception e) {\n\t\t\tLOGGER.error(\"Error retrieving " + name.toLowerCase() + ":\",e);"
-					+ "\n\t\t\tthrow new WebApplicationException(e,Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeResultSet(rset);\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n")
+					+ "\n\t\t\tthrow new WebApplicationException(e.getMessage(),Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeResultSet(rset);\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n")
 			.append("\t\t}\n")
 			.append(exitedLog(name, "getAll"))
 			.append("\t\treturn "+name.toLowerCase()+";\n\t}\n\n");
@@ -146,7 +147,7 @@ public class DaoImpl {
 			getAllMethodStr.append("\t\t\t\t\tresult.add("+name.toLowerCase()+");\n")
 			.append("\t\t\t\t}\n\t\t\t}")
 			.append("\n\t\t}catch (Exception e) {\n\t\t\tLOGGER.error(\"Error retrieving all " + name.toLowerCase() +"\", e);"
-					+ "\n\t\t\tthrow new WebApplicationException(e,Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeResultSet(rset);\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n")
+					+ "\n\t\t\tthrow new WebApplicationException(e.getMessage(),Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeResultSet(rset);\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n")
 			.append("\t\t}\n")
 			.append(exitedLog("", "getAll"))
 			.append("\t\treturn result;\n\t}\n\n");
@@ -172,7 +173,7 @@ public class DaoImpl {
 			.append( "\t\t\t\tif (rowCount == 0) {\n\t\t\t\t\tthrow new WebApplicationException(\"no record deleted\", Constants.EXPECTATION_FAILED);\n\t\t\t\t}")
 			.append( "\n\t\t\t}")
 			.append( "\n\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(\"Error deleting " + name.toLowerCase() + ":\", e);"
-					+ "\n\t\t\tthrow new WebApplicationException(e,Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
+					+ "\n\t\t\tthrow new WebApplicationException(e.getMessage(),Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
 			.append( exitedLog(name, "delete"))
 			.append( "\t\treturn " + name.toLowerCase() + ";\n\t}\n\n");
 			return deleteMethodStr;
@@ -201,7 +202,7 @@ public class DaoImpl {
 			.append("\t\t\t\tif (rowCount == 0) {\n\t\t\t\t\tthrow new WebApplicationException(\"no record deleted\", Constants.EXPECTATION_FAILED);\n\t\t\t\t}")
 			.append("\n\t\t\t}")
 			.append("\n\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(\"Error deleting " + name.toLowerCase() + ":\", e);"
-					+ "\n\t\t\tthrow new WebApplicationException(e,Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
+					+ "\n\t\t\tthrow new WebApplicationException(e.getMessage(),Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
 			.append(exitedLogWithData(name, "delete", "commaSeparatedIds"))
 			.append("\t\treturn false;\n\t}\n\n");
 			return deleteMethodStr;
@@ -235,7 +236,7 @@ public class DaoImpl {
 			.append("\t\t\t\tif (rowCount == 0) {\n\t\t\t\t\tthrow new WebApplicationException(\"no record inserted\", Constants.EXPECTATION_FAILED);\n\t\t\t\t}")
 			.append("\n\t\t\t}")
 			.append("\n\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(\"Error inserting " + name.toLowerCase() + ":\",e);"
-					+ "\n\t\t\tthrow new WebApplicationException(e,Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
+					+ "\n\t\t\tthrow new WebApplicationException(e.getMessage(),Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
 			.append(exitedLog(name, "create"))
 			.append("\t\treturn " + name.toLowerCase() + ";\n\t}\n");
 			return insertMethodStr;
@@ -250,7 +251,7 @@ public class DaoImpl {
 			StringBuilder updateMethodTempStr = new StringBuilder("\t@Override\n\tpublic")
 					.append(Dao.updateMethodStr(name));
 			StringBuilder updateMethodStr = new StringBuilder(updateMethodTempStr.substring(0, updateMethodTempStr.length() - 3))
-			.append("{\n\n\ndelete created by and created at logic from below\n\n")
+			.append("{\n")
 			.append(enterLog(name, "update"))
 			.append(variableNullCheck(name))
 			.append("\t\tPreparedStatement pstmt = null;\n\t\ttry {\n\t\t\tif (conn != null) {\n\t\t\t\tint ctr = 1;\n")
@@ -260,6 +261,9 @@ public class DaoImpl {
 				String fieldName = fieldObj.optString("name");
 				if (StringUtils.isEmpty(fieldName)) {
 					throw new Exception("empty fieldName received:" + fieldName);
+				}
+				if(fieldName.equals("created_by") || fieldName.equals("created_at")){
+					continue;
 				}
 				String fieldType = fieldObj.optString("type");
 				if (!fieldName.equals(pk)) {
@@ -273,7 +277,7 @@ public class DaoImpl {
 			.append("\t\t\t\tif (rowCount == 0) {\n\t\t\t\t\tthrow new WebApplicationException(\"no record updated\", Constants.EXPECTATION_FAILED);\n\t\t\t\t}")
 			.append("\n\t\t\t}")
 			.append("\n\t\t} catch (Exception e) {\n\t\t\tLOGGER.error(\"Error updating " + name.toLowerCase() + ":\", e);"
-					+ "\n\t\t\tthrow new WebApplicationException(e,Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
+					+ "\n\t\t\tthrow new WebApplicationException(e.getMessage(),Constants.EXPECTATION_FAILED);\n\t\t} finally {\n\t\t\tDatabaseUtilities.closeStatement(pstmt);\n\t\t}\n")
 			.append(exitedLog(name, "update"))
 			.append("\t\treturn " + name.toLowerCase() + ";\n\t}\n");
 			return updateMethodStr;

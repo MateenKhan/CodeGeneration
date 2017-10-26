@@ -42,7 +42,8 @@ public class SqlQuerys {
 			if (StringUtils.isEmpty(pk)) {
 				throw new Exception("empty pk received");
 			}
-			f = new File("SqlQuerys.java");
+			String fileLocaiton = PropertyManager.getProperty("temp.file.location");
+			f = new File(fileLocaiton+"SqlQuerys.java");
 			fout = new FileOutputStream(f);
 			StringBuilder finalCode = new StringBuilder();
 			StringBuilder insertQry = new StringBuilder("");
@@ -77,7 +78,9 @@ public class SqlQuerys {
 				selectAllQry.append("`" + fieldName + "`, ");
 				insertQryValues.append("?, ");
 				if (!fieldName.equals(pk)) {
-					updateQry.append("`" + fieldName + "` = ?, ");
+					if(!fieldName.equals("created_by") && !fieldName.equals("created_at")){
+						updateQry.append("`" + fieldName + "` = ?, ");
+					}
 				}
 			}
 			insertQry = new StringBuilder(insertQry.substring(0, insertQry.length() - 2));
