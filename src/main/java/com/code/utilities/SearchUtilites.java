@@ -47,13 +47,13 @@ public class SearchUtilites {
 						}
 						System.out.println("*********************************************");
 					}
+					fin.close();
+					bin.close();
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			fin.close();
-			bin.close();
 		}
 	}
 	
