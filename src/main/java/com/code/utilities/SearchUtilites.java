@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -60,7 +61,11 @@ public class SearchUtilites {
 				}
 				if (!result.isEmpty()) {
 					System.out.println("*********************************************");
-					System.out.println(result);
+					Iterator<String> itr = result.keySet().iterator();
+					while(itr.hasNext()){
+						String key = itr.next();
+						System.out.println(key+""+result.get(key));
+					}
 					System.out.println("*********************************************");
 				}
 			}
@@ -97,6 +102,7 @@ public class SearchUtilites {
 						}
 						deque = new LinkedList<String>(testCasesLst);
 						matchFound=false;
+						lineMatchInterval = 1;
 					}
 				}
 				if(matchFound){
