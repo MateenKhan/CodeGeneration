@@ -5,21 +5,37 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class SearchUtilites {
 
 	public static void main(String[] args) throws IOException {
 		search();
+//		ArrayList<String> asdf = new ArrayList<String>();
+//		asdf.add("1");
+//		asdf.add("2");
+//		asdf.add("3");
+//		Deque<String> deque = new LinkedList<String>(asdf);
+//		System.out.println(deque);
+//		System.out.println(deque.pop());
+//		System.out.println(deque);
+//		System.out.println(deque.pop());
+//		System.out.println(deque);
+//		System.out.println(deque.pop());
+//		System.out.println(deque);
+//		System.out.println(asdf);
 	}
 
 	public static void search() throws IOException {
 		FileReader fin = null;
 		BufferedReader bin = null;
 		try {
-			String folderLocation = "C:/Users/MateenAhmed/Desktop/logs/prod/invoices/";
+			 String folderLocation = "C:/Users/MateenAhmed/Desktop/logs/prod/invoices/";
+//			String folderLocation = "F:/2/";
+//			String folderLocation = "F:/1/asdf/";
 			String testCase1 = "Method Name : {} updateInvoices";
 			String testCase2 = "014443e6-1f53-420d-8470-70d2011cfc02";
 			String testCase3 = "\"state\":\"past_due\"";
@@ -27,7 +43,7 @@ public class SearchUtilites {
 			testCasesLst.add(testCase1);
 			testCasesLst.add(testCase2);
 			testCasesLst.add(testCase3);
-			Map<String, String> result = new HashMap<String, String>();
+			Map<String,ArrayList<Integer>> result = new HashMap<String,ArrayList<Integer>>();
 			File folder = new File(folderLocation);
 			if (folder.isDirectory() && folder.exists()) {
 				File files[] = folder.listFiles();
@@ -35,20 +51,17 @@ public class SearchUtilites {
 					fin = new FileReader(inputFile);
 					bin = new BufferedReader(fin);
 					int lineNumber = 1;
-					searchHelper(lineNumber, bin, testCasesLst, result);
-					if (!result.isEmpty()) {
-						System.out.println("*********************************************");
-						System.out.println("Found in:" + inputFile.getName());
-						Iterator<String> resultKeysIterator = result.keySet().iterator();
-						while(resultKeysIterator.hasNext()){
-							String key = resultKeysIterator.next();
-							String value = result.get(key);
-							System.out.println("Line Number:"+key+" Test Case:"+value);
-						}
-						System.out.println("*********************************************");
-					}
+					int lineBuffer = 60;
+					// System.out.println("testCasesLst:"+testCasesLst);
+					searchHelper(inputFile.getName(),lineNumber, bin, testCasesLst, result, lineBuffer);
+					// System.out.println("map:"+result);
 					fin.close();
 					bin.close();
+				}
+				if (!result.isEmpty()) {
+					System.out.println("*********************************************");
+					System.out.println(result);
+					System.out.println("*********************************************");
 				}
 			}
 		} catch (Exception e) {
@@ -56,41 +69,44 @@ public class SearchUtilites {
 		} finally {
 		}
 	}
-	
 
-	public static void searchHelper(int lineNumber, BufferedReader bin, ArrayList<String> testCasesLst, Map<String, String> result) {
+	public static void searchHelper(String filename,int lineNumber, BufferedReader bin, ArrayList<String> testCasesLst, Map<String,ArrayList<Integer>> result,int lineBuffer) {
 		try {
-			if (testCasesLst.isEmpty()) {
-				return;
-			}
 			String line;
+			Deque<String> deque = new LinkedList<String>(testCasesLst);
+			int lineMatchInterval = 1;
+			boolean matchFound=false;
 			while ((line = bin.readLine()) != null) {
-				if (testCasesLst.isEmpty()) {
-					return;
+				lineNumber++;
+				if(lineMatchInterval>=lineBuffer){
+					deque = new LinkedList<String>(testCasesLst);
+					lineMatchInterval = 1;
+					matchFound=false;
 				}
-				if (testCase(lineNumber++, line, testCasesLst.get(0), result)) {
-					testCasesLst.remove(0);
-					if (testCasesLst.isEmpty()) {
-						return;
-					} else {
-						searchHelper(lineNumber, bin, testCasesLst, result);
+				String testCase = deque.getFirst();
+				if(line.contains(testCase)){
+					deque.pop();
+					matchFound=true;
+					if(deque.size()==0 && lineMatchInterval<lineBuffer){
+						if(result.get(filename)==null){
+							ArrayList<Integer> lineNumbers = new ArrayList<Integer>();
+							lineNumbers.add(lineNumber);
+							result.put(filename,lineNumbers);
+						}else{
+							result.get(filename).add(lineNumber);
+						}
+						deque = new LinkedList<String>(testCasesLst);
+						matchFound=false;
 					}
 				}
+				if(matchFound){
+					lineMatchInterval++;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(filename);
+			System.out.println(lineNumber);
 		}
-	}
-
-	public static boolean testCase(int lineNumber, String input, String testCase, Map<String, String> result) {
-		try {
-			if (input.contains(testCase)) {
-				result.put(lineNumber + "", testCase);
-				return true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 }
