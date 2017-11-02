@@ -15,19 +15,6 @@ public class SearchUtilites {
 
 	public static void main(String[] args) throws IOException {
 		search();
-//		ArrayList<String> asdf = new ArrayList<String>();
-//		asdf.add("1");
-//		asdf.add("2");
-//		asdf.add("3");
-//		Deque<String> deque = new LinkedList<String>(asdf);
-//		System.out.println(deque);
-//		System.out.println(deque.pop());
-//		System.out.println(deque);
-//		System.out.println(deque.pop());
-//		System.out.println(deque);
-//		System.out.println(deque.pop());
-//		System.out.println(deque);
-//		System.out.println(asdf);
 	}
 
 	public static void search() throws IOException {
@@ -35,10 +22,12 @@ public class SearchUtilites {
 		BufferedReader bin = null;
 		try {
 			 String folderLocation = "C:/Users/MateenAhmed/Desktop/logs/prod/invoices/";
-//			String folderLocation = "F:/2/";
-//			String folderLocation = "F:/1/asdf/";
 			String testCase1 = "Method Name : {} updateInvoices";
-			String testCase2 = "014443e6-1f53-420d-8470-70d2011cfc02";
+//			String testCase2 = "76aa668e-b23a-4582-9a45-642820cfb4f0";
+//			String testCase2 = "256d0e09-fb49-4f66-ba6c-0a0271e859c0";
+//			String testCase2 = "014443e6-1f53-420d-8470-70d2011cfc02";
+//			String testCase2 = "5f20695b-b93c-4ec1-bddc-6d73f0b2878c";
+			String testCase2 = "250973b7-1c4b-4bd9-8b58-5328765ca511";
 			String testCase3 = "\"state\":\"past_due\"";
 			ArrayList<String> testCasesLst = new ArrayList<>();
 			testCasesLst.add(testCase1);
