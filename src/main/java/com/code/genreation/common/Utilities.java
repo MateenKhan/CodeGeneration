@@ -302,7 +302,10 @@ public class Utilities {
 							} catch (InterruptedException e) {
 								LOGGER.error(e);
 							}
-							filesItr.next().delete();
+							File file = filesItr.next();
+							if(file!=null){
+								file.delete();
+							}
 						}
 					}
 				}.start();

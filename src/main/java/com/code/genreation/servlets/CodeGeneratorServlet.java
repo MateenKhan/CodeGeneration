@@ -22,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.WebApplicationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,10 +68,10 @@ public class CodeGeneratorServlet extends HttpServlet {
 		ZipOutputStream zos = null;
 		BufferedInputStream fif = null;
 		try {
+			JSONObject requestObj = new JSONObject();
 			String tableName = request.getParameter("table");
 			String dbName = request.getParameter("database");
 			String pk = request.getParameter("pk");
-			JSONObject requestObj = new JSONObject();
 			if (!StringUtils.isEmpty(pk)) {
 				requestObj.put("pk", pk);
 			}
@@ -82,24 +83,39 @@ public class CodeGeneratorServlet extends HttpServlet {
 				throw new Exception("unable to fetch fields for the table:" + tableName);
 			}
 			System.out.println(requestObj);
-			File pojo = Pojo.createPojo(requestObj);
-			File dao = Dao.createDao(requestObj);
-			File daoImpl = DaoImpl.createDaoImpl(requestObj);
-			File sqlQuerys = SqlQuerys.createSqlQuerys(requestObj);
-			File controller = Controller.createController(requestObj);
-			File controllerImpl = ControllerImpl.createControllerImpl(requestObj);
+			boolean createPojo = Boolean.parseBoolean(request.getParameter("pojo"));
+			boolean createDao = Boolean.parseBoolean(request.getParameter("dao"));
+			boolean createDaoImpl = Boolean.parseBoolean(request.getParameter("daoImpl"));
+			boolean createQuerys = Boolean.parseBoolean(request.getParameter("querys"));
+			boolean createController = Boolean.parseBoolean(request.getParameter("controller"));
+			boolean createcontrollerImpl = Boolean.parseBoolean(request.getParameter("controllerImpl"));
+			files = new ArrayList<File>();
+
+			File pojo = null, dao = null, daoImpl = null, sqlQuerys = null, controller = null, controllerImpl = null;
+			if (createPojo)
+				pojo = Pojo.createPojo(requestObj);
+			if (createDao)
+				dao = Dao.createDao(requestObj);
+			if (createDaoImpl)
+				daoImpl = DaoImpl.createDaoImpl(requestObj);
+			if (createQuerys)
+				sqlQuerys = SqlQuerys.createSqlQuerys(requestObj);
+			if (createController)
+				controller = Controller.createController(requestObj);
+			if (createcontrollerImpl)
+				controllerImpl = ControllerImpl.createControllerImpl(requestObj);
 			// Set the content type based to zip
-			response.setContentType("Content-type: text/zip");
+			response.setContentType("Content-type: application/zip");
 			response.setHeader("Content-Disposition", "attachment; filename=code.zip");
 
 			// List of files to be downloaded
-			files = new ArrayList<File>();
 			files.add(pojo);
 			files.add(dao);
 			files.add(daoImpl);
 			files.add(sqlQuerys);
 			files.add(controller);
 			files.add(controllerImpl);
+//			FileOutputStream out = new FileOutputStream("C:/Users/MateenAhmed/Downloads/temp/1.zip");
 			ServletOutputStream out = response.getOutputStream();
 			zos = new ZipOutputStream(new BufferedOutputStream(out));
 			for (File file : files) {
@@ -128,8 +144,11 @@ public class CodeGeneratorServlet extends HttpServlet {
 				System.out.println("Finished adding file " + file.getName());
 			}
 			zos.close();
+		} catch (WebApplicationException e) {
+			LOGGER.error("error creating code", e);
+			throw e;
 		} catch (Exception e) {
-			LOGGER.error(e);
+			LOGGER.error("error creating code", e);
 		} finally {
 			Utilities.deleteFilesAsync(files);
 			Utilities.closeZipOutputStream(zos);
@@ -140,9 +159,6 @@ public class CodeGeneratorServlet extends HttpServlet {
 	private JSONArray getTableDetails(String pk, String tableName, String dbName, JSONObject requestObj) {
 		if (StringUtils.isEmpty(tableName)) {
 			return null;
-		}
-		if (StringUtils.isEmpty(dbName)) {
-			dbName = "qount";
 		}
 		if (requestObj == null) {
 			return null;
