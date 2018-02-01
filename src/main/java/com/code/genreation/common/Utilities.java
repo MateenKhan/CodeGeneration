@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Utilities {
@@ -200,6 +201,41 @@ public class Utilities {
 			throw e;
 		}
 	}
+	
+	
+	/**
+	 * method used to get method String value which is prepended in ui model member
+	 * name
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static String getUiTypeString(String type) throws Exception {
+		try {
+			if (StringUtils.isEmpty(type)) {
+				throw new Exception("empty field type received:" + type);
+			}
+			switch (type) {
+			case "boolean":
+				return "boolean";
+			case "int":
+			case "float":
+			case "double":
+			case "long":
+			case "short":
+			case "byte":
+				return "number";
+			case "char":
+			case "String":
+				return "string";
+			default:
+				return "any";
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+			throw e;
+		}
+	}
 
 	public static Response constructResponse(String message, int statusHeader) {
 		JSONObject responseJSON = new JSONObject();
@@ -333,5 +369,37 @@ public class Utilities {
 		} catch (Exception e) {
 			LOGGER.error(e);
 		}
+	}
+	
+	public static String getList(JSONArray fields, String separator){
+		try {
+			if(fields!=null && fields.length()>0){
+				String result = "";
+				for(int i=0;i<fields.length();i++){
+					result+=separator+fields.optJSONObject(i).optString("name")+separator+",";
+				}
+				result = result.substring(0, result.length()-1);
+				System.out.println(result);
+				return result;
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+		}
+		return null;
+	}
+	
+	public static JSONArray getFooTableListJson(JSONArray fileds){
+		try {
+			if(fileds!=null && fileds.length()>0){
+				for(int i=0;i<fileds.length();i++){
+					String name = fileds.optJSONObject(i).optString("name");
+					fileds.optJSONObject(i).put("title",capitalizeFirstLetter(name));
+				}
+				return fileds;
+			}
+		} catch (Exception e) {
+			LOGGER.error(e);
+		}
+		return null;
 	}
 }

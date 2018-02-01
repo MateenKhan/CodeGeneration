@@ -45,6 +45,7 @@ public class Pojo {
 			HashSet<String> imports = new  HashSet<String>();
 			StringBuilder fieldsStr = new StringBuilder("");
 			StringBuilder getterStr = new StringBuilder("");
+			StringBuilder setterPartialStr = new StringBuilder("");
 			StringBuilder setterStr = new StringBuilder("");
 			for (int i = 0; i < fields.length(); i++) {
 				JSONObject fieldObj = fields.optJSONObject(i);
@@ -61,6 +62,8 @@ public class Pojo {
 				setterStr.append("\tpublic void set").append(Utilities.getCamelCase(fieldName))
 				.append("(").append(fieldType).append(" ").append(fieldName).append(") {\n\t\tthis.")
 				.append(fieldName).append("=").append(fieldName).append(";\n\t}\n\n");
+				setterPartialStr.append("_1040.set").append(Utilities.getCamelCase(fieldName)).append("(")
+				.append("fields.get(Constants.").append(fieldName).append("));\n");
 
 			}
 			Iterator<String> importsItr = imports.iterator();
@@ -76,6 +79,7 @@ public class Pojo {
 			.append("\n\t@Override\n\tpublic String toString() {\n\t\ttry {\n\t\t\treturn new ObjectMapper().writeValueAsString(this);\n\t\t} catch (Exception e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t\t\treturn super.toString();\n\t}\n")
 			.append("}");
 			fout.write((finalCode.toString()).getBytes());
+			System.out.println(setterPartialStr);
 		} catch (Exception e) {
 			LOGGER.error(e);
 			throw e;
