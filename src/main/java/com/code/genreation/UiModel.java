@@ -17,12 +17,12 @@ public class UiModel {
 	public static void main(String[] args) throws Exception {
 		String str = "{\"location\":\"F:/\",\"name\":\"BillingCompany\",\"fields\":[{\"name\":\"id\",\"type\":\"String\"},{\"name\":\"company_id\",\"type\":\"String\"},{\"name\":\"created_by\",\"type\":\"String\"},{\"name\":\"created_at\",\"type\":\"long\"},{\"name\":\"last_updated_by\",\"type\":\"String\"},{\"name\":\"last_updated_at\",\"type\":\"long\"},{\"name\":\"plan_id\",\"type\":\"String\"},{\"name\":\"state\",\"type\":\"String\"}]}";
 		JSONObject obj = Utilities.getJsonFromString(str);
-		createUiModel(obj);
+		generateCode(obj);
 
 	}
 
 	@SuppressWarnings("resource")
-	public static File createUiModel(JSONObject obj) throws Exception {
+	public static File generateCode(JSONObject obj) throws Exception {
 		File f = null;
 		FileOutputStream fout = null;
 		try {

@@ -38,6 +38,7 @@ import com.code.genreation.Pojo;
 import com.code.genreation.SqlQuerys;
 import com.code.genreation.UiComponent;
 import com.code.genreation.UiForm;
+import com.code.genreation.UiHtml;
 import com.code.genreation.UiModel;
 import com.code.genreation.UiService;
 import com.code.genreation.common.Utilities;
@@ -108,10 +109,11 @@ public class CodeGeneratorServlet extends HttpServlet {
 				controller = Controller.createController(requestObj);
 			if (createcontrollerImpl)
 				controllerImpl = ControllerImpl.createControllerImpl(requestObj);
-			File uiComponent = UiComponent.createUiComponent(requestObj);
-			File uiForm = UiForm.createUiForm(requestObj);
-			File uiModel = UiModel.createUiModel(requestObj);
-			File uiService = UiService.createUiService(requestObj);
+			File uiComponent = UiComponent.generateCode(requestObj);
+			File uiForm = UiForm.generateCode(requestObj);
+			File uiModel = UiModel.generateCode(requestObj);
+			File uiService = UiService.generateCode(requestObj);
+			File uiHtml = UiHtml.generateCode(requestObj);
 			// Set the content type based to zip
 			response.setContentType("Content-type: application/zip");
 			response.setHeader("Content-Disposition", "attachment; filename=code.zip");
@@ -127,6 +129,7 @@ public class CodeGeneratorServlet extends HttpServlet {
 			files.add(uiForm);
 			files.add(uiModel);
 			files.add(uiService);
+			files.add(uiHtml);
 //			FileOutputStream out = new FileOutputStream("C:/Users/MateenAhmed/Downloads/temp/1.zip");
 			ServletOutputStream out = response.getOutputStream();
 			zos = new ZipOutputStream(new BufferedOutputStream(out));
