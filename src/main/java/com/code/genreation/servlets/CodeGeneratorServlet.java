@@ -85,7 +85,7 @@ public class CodeGeneratorServlet extends HttpServlet {
 				requestObj.put("fields", fields);
 				requestObj.put("name", tableName);
 			} else {
-				throw new Exception("unable to fetch fields for the table:" + tableName);
+				throw new WebApplicationException("unable to fetch fields for the table:" + tableName, 417);
 			}
 			System.out.println(requestObj);
 			boolean createPojo = Boolean.parseBoolean(request.getParameter("pojo"));
@@ -164,6 +164,7 @@ public class CodeGeneratorServlet extends HttpServlet {
 			throw e;
 		} catch (Exception e) {
 			LOGGER.error("error creating code", e);
+			throw new WebApplicationException(e.getMessage(), 417);
 		} finally {
 			Utilities.deleteFilesAsync(files);
 			Utilities.closeZipOutputStream(zos);
@@ -171,7 +172,7 @@ public class CodeGeneratorServlet extends HttpServlet {
 		}
 	}
 
-	private JSONArray getTableDetails(String pk, String tableName, String dbName, JSONObject requestObj) {
+	private JSONArray getTableDetails(String pk, String tableName, String dbName, JSONObject requestObj) throws Exception {
 		if (StringUtils.isEmpty(tableName)) {
 			return null;
 		}
@@ -216,12 +217,12 @@ public class CodeGeneratorServlet extends HttpServlet {
 			return result;
 		} catch (Exception e) {
 			LOGGER.error(e);
+			throw e;
 		} finally {
 			DatabaseUtilities.closeConnection(conn);
 			DatabaseUtilities.closeStatement(ps);
 			DatabaseUtilities.closeResultSet(pkResultSet);
 			DatabaseUtilities.closeResultSet(rs);
 		}
-		return null;
 	}
 }
