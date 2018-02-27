@@ -15,7 +15,7 @@ public class UiModel {
 	private static Logger LOGGER = Logger.getLogger(UiModel.class);
 
 	public static void main(String[] args) throws Exception {
-		String str = "{\"location\":\"F:/\",\"name\":\"BillingCompany\",\"fields\":[{\"name\":\"id\",\"type\":\"String\"},{\"name\":\"company_id\",\"type\":\"String\"},{\"name\":\"created_by\",\"type\":\"String\"},{\"name\":\"created_at\",\"type\":\"long\"},{\"name\":\"last_updated_by\",\"type\":\"String\"},{\"name\":\"last_updated_at\",\"type\":\"long\"},{\"name\":\"plan_id\",\"type\":\"String\"},{\"name\":\"state\",\"type\":\"String\"}]}";
+		String str = "{\"location\":\"F:/\",\"name\":\"Discounts\",\"fields\":[{\"name\":\"id\",\"type\":\"String\"},{\"name\":\"name\",\"type\":\"String\"},{\"name\":\"description\",\"type\":\"String\"},{\"name\":\"type\",\"type\":\"String\"}]}";
 		JSONObject obj = Utilities.getJsonFromString(str);
 		generateCode(obj);
 

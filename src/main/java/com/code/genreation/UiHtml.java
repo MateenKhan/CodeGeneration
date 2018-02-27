@@ -15,7 +15,7 @@ public class UiHtml {
 	private static Logger LOGGER = Logger.getLogger(UiHtml.class);
 
 	public static void main(String[] args) throws Exception {
-		String str = "{\"location\":\"F:/\",\"name\":\"BillingCompany\",\"fields\":[{\"name\":\"id\",\"type\":\"String\"},{\"name\":\"company_id\",\"type\":\"String\"},{\"name\":\"created_by\",\"type\":\"String\"},{\"name\":\"created_at\",\"type\":\"long\"},{\"name\":\"last_updated_by\",\"type\":\"String\"},{\"name\":\"last_updated_at\",\"type\":\"long\"},{\"name\":\"plan_id\",\"type\":\"String\"},{\"name\":\"state\",\"type\":\"String\"}]}";
+		String str = "{\"location\":\"F:/\",\"name\":\"Discounts\",\"fields\":[{\"name\":\"id\",\"type\":\"String\"},{\"name\":\"name\",\"type\":\"String\"},{\"name\":\"description\",\"type\":\"String\"},{\"name\":\"type\",\"type\":\"String\"}]}";
 		JSONObject obj = Utilities.getJsonFromString(str);
 		generateCode(obj);
 
@@ -54,11 +54,12 @@ public class UiHtml {
 			for (int i = 0; i < fields.length(); i++) {
 				JSONObject fieldObj = fields.optJSONObject(i);
 				String fieldName = Utilities.capitalizeFirstLetter(fieldObj.optString("name"));
+				String fieldVariable = fieldName.toLowerCase();
 				if (StringUtils.isEmpty(fieldName)) {
 					throw new Exception("empty fieldName received:");
 				}
 				fieldsStr.append("                      <div class=\"row\">\n                        <div class=\"small-4 columns\">\n                          <label class=\"text-right\">")
-				.append(fieldName).append("</label>\n                        </div>\n                        <div class=\"small-6 columns\">\n                          <input type=\"text\" formControlName=\"name\" placeholder=\"")
+				.append(fieldName).append("</label>\n                        </div>\n                        <div class=\"small-6 columns\">\n                          <input type=\"text\" formControlName=\"").append(fieldVariable).append("\" placeholder=\"")
 				.append(fieldName).append("*\"/>\n                        </div>\n                      </div>\n					  \n");
 			}
 			finalCode.append(fieldsStr);

@@ -2,7 +2,7 @@ package com.code.genreation;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.String;
+import java.nio.file.FileSystems;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -38,6 +38,7 @@ public class Pojo {
 				throw new Exception("empty name received");
 			}
 			String fileLocaiton = PropertyManager.getProperty("temp.file.location");
+			System.out.println(FileSystems.getDefault().getPath("."));
 			f = new File(fileLocaiton+pojoFileName+".java");
 			System.out.println(f.getAbsolutePath());
 			fout = new FileOutputStream(f);
