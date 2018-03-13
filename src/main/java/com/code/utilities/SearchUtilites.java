@@ -9,6 +9,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class SearchUtilites {
@@ -30,8 +31,22 @@ public class SearchUtilites {
 		long startTime = System.currentTimeMillis();
 		try {
 			int lineBuffer = 200;
+			String invalidTestCase2 = "getInvoiceIds";
+			String invalidTestCase3 = " - Entity: [";
+			String invalidTestCase4 = "TRACE ConstraintTree:112 - Validating value [";
+			String invalidTestCase5 = "payments:[";
+			String invalidTestCase6 = "exited getInvoicePaymentsIds invoiceIds";
+			String invalidTestCase7 = "entered getInvoicePaymentsIds invoiceIds";
+			List<String> invalidTestCasesList = new ArrayList<String>();
+			invalidTestCasesList.add(invalidTestCase2);
+			invalidTestCasesList.add(invalidTestCase3);
+			invalidTestCasesList.add(invalidTestCase4);
+			invalidTestCasesList.add(invalidTestCase5);
+			invalidTestCasesList.add(invalidTestCase6);
+			invalidTestCasesList.add(invalidTestCase7);
+			
 			ArrayList<String> testCasesLst = new ArrayList<>();
-			testCasesLst.add("1c7cda0b-2212-4081-ae45-55a8f369397f");
+			testCasesLst.add("013b8251-0b66-4bcc-becf-2853938002f9");
 //			testCasesLst.add("Method Name : {} createPayment");
 			String folderLocation = "C:/Users/MateenAhmed/Desktop/logs/prod/invoices/all_2/";
 			Map<String,ArrayList<Integer>> result = new LinkedHashMap<String,ArrayList<Integer>>();
@@ -45,7 +60,7 @@ public class SearchUtilites {
 					fin = new FileReader(inputFile);
 					bin = new BufferedReader(fin);
 					int lineNumber = 1;
-					nestedSearch(inputFile.getName(),lineNumber, bin, testCasesLst, result, lineBuffer);
+					nestedSearch(inputFile.getName(),lineNumber, bin, testCasesLst, result, lineBuffer, invalidTestCasesList);
 					fin.close();
 					bin.close();
 				}
@@ -71,12 +86,13 @@ public class SearchUtilites {
 		}
 	}
 
-	public static void nestedSearch(String filename,int lineNumber, BufferedReader bin, ArrayList<String> testCasesLst, Map<String,ArrayList<Integer>> result,int lineBuffer) {
+	public static void nestedSearch(String filename,int lineNumber, BufferedReader bin, ArrayList<String> testCasesLst, Map<String,ArrayList<Integer>> result,int lineBuffer, List<String> invalidTestCasesList) {
 		try {
 			String line;
 			Deque<String> deque = new LinkedList<String>(testCasesLst);
 			int lineMatchInterval = 1;
 			boolean matchFound=false;
+			boolean continueOuter = false;
 			while ((line = bin.readLine()) != null) {
 				lineNumber++;
 				if(!(line.trim().length()>0)){
@@ -84,11 +100,17 @@ public class SearchUtilites {
 				}
 				String testCase = deque.getFirst();
 				String invalidTestCase = "','"+testCase+"','";
-				String invalidTestCase2 = "getInvoiceIds";
-				String invalidTestCase3 = " - Entity: [";
-				String invalidTestCase4 = "TRACE ConstraintTree:112 - Validating value [";
-				String invalidTestCase5 = "InvoiceParser:899 - entered getCommaSeparatedIds(List<Payment> payments:";
-				if(line.contains(invalidTestCase) || line.contains(invalidTestCase2) || line.contains(invalidTestCase3) || line.contains(invalidTestCase4) || line.contains(invalidTestCase5)){
+				continueOuter = false;
+				if(invalidTestCasesList!=null && !invalidTestCasesList.isEmpty()){
+					invalidTestCasesList.add(invalidTestCase);
+					for(int invalidCtr =0 ; invalidCtr<invalidTestCasesList.size();invalidCtr++){
+						if(line.contains(invalidTestCasesList.get(invalidCtr))){
+							continueOuter = true;
+							break;
+						}
+					}
+				}
+				if(continueOuter){
 					continue;
 				}
 				if(lineMatchInterval>=lineBuffer){
